@@ -19,7 +19,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: "root"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "postgres"
       ME_CONFIG_MONGODB_ADMINPASSWORD: "example"
       ME_CONFIG_MONGODB_URL: "mongodb://root:example@mongo:27017/"
       ME_CONFIG_BASICAUTH: false
@@ -30,9 +30,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DATABASE: "BDA_USER"
-      POSTGRES_USERNAME: "root"
       POSTGRES_PASSWORD: "example"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "root", "-d", "BDA_USER"]
     volumes:
       - pgdata-vol:/var/lib/postgresql/data
 
