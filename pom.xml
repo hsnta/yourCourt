@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.development.app</groupId>
-	<artifactId>BasketballService</artifactId>
+	<artifactId>basketballService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BasketballService</name>
+	<name>basketballService</name>
 	<description>Basketball development app</description>
 	<properties>
 		<java.version>17</java.version>
