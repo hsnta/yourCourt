@@ -31,8 +31,6 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: "example"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "root", "-d", "BDA_USER"]
     volumes:
       - pgdata-vol:/var/lib/postgresql/data
 
