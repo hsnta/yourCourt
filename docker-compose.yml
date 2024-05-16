@@ -1,0 +1,61 @@
+version: "3.3"
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongodb-data-vol:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "example"
+      MONGO_INITDB_DATABASE: "BDA_DEV"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "postgres"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "example"
+      ME_CONFIG_MONGODB_URL: "mongodb://root:example@mongo:27017/"
+      ME_CONFIG_BASICAUTH: false
+
+  postgre-db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "example"
+    volumes:
+      - pgdata-vol:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    volumes:
+      - pgadmin-data-vol:/var/lib/pgadmin
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user-name@domain-name.com"
+      PGADMIN_DEFAULT_PASSWORD: "example"
+
+  basketball-service:
+    build:
+      context: .
+    container_name: "app"
+    depends_on:
+      - mongo
+      - postgre-db
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongodb-data-vol:
+  pgdata-vol:
+  pgadmin-data-vol:
