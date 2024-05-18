@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Page3 extends StatelessWidget {
-  const Page3({super.key});
+class Stats extends StatelessWidget {
+  const Stats({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
+      color: Colors.blue,
       child: const Center(
         child: Text(
-          'Page 3',
+          'Stats',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,

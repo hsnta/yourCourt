@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/themes/theme_factory.dart';
 import 'bottom_navigation/bottom_navigation.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,11 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Your Court',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(elevation: 1),
-        iconTheme: const IconThemeData(color: Colors.white),
-        brightness: Brightness.dark,
-      ),
+      theme: ThemeFactory.createTheme(context),
       home: const BottomNavigation(),
     );
   }
