@@ -13,6 +13,13 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(elevation: 1),
         iconTheme: const IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
+        cardTheme: const CardTheme(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16.0),
+            ),
+          ),
+        ),
       ),
       home: const BottomNavigation(),
     );
