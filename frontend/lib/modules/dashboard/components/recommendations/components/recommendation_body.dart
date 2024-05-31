@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/dashboard/components/recommendations/components/recommendation_card.dart';
+import 'package:frontend/modules/dashboard/components/recommendations/components/recommendations_list.dart';
+import 'package:frontend/modules/dashboard/components/recommendations/components/customize_workout_button.dart';
 
 class RecommendationsBody extends StatefulWidget {
   const RecommendationsBody({super.key});
@@ -24,17 +25,9 @@ class _RecommendationsBodyState extends State<RecommendationsBody> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: ReorderableListView(
-            padding: const EdgeInsets.all(16.0),
-            children: cardData
-                .map((data) => RecommendationCard(
-              key: ValueKey(data["title"]),
-              title: data["title"] ?? '',
-              description: data["description"] ?? '',
-              difficulty: data["difficulty"] ?? '',
-            ))
-                .toList(),
-            onReorder: (int oldIndex, int newIndex) {
+          child: RecommendationsList(
+            cardData: cardData,
+            onReorder: (oldIndex, newIndex) {
               setState(() {
                 if (newIndex > oldIndex) {
                   newIndex -= 1;
@@ -45,21 +38,10 @@ class _RecommendationsBodyState extends State<RecommendationsBody> {
             },
           ),
         ),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Add your action here
-            },
-            child: const Text(
-              'CUSTOMIZE WORKOUT',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
+        CustomizeWorkoutButton(
+          onPressed: () {
+            // Add your action here
+          },
         ),
       ],
     );
