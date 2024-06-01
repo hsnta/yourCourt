@@ -11,7 +11,7 @@ class Stats extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/dashboard_background.png'),
+                image: AssetImage('assets/images/dashboard_background.png'),
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.topCenter),
           ),
