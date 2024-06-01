@@ -1,0 +1,16 @@
+{
+  "name": "node-starter",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node mocks/db.js",
+    "start-express": "nodemon e json mocks/db.js"
+  },
+  "devDependencies": {
+    "express": "^4.19.2",
+    "json-graphql-server": "^3.0.1",
+    "nodemon": "^3.0.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
+}
