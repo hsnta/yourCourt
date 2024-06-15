@@ -27,7 +27,7 @@ class RecommendationCard extends StatelessWidget {
             ),
           ),
           _Tag(difficulty: difficulty),
-          _DragButton(),
+          const _DragButton(),
         ],
       ),
     );

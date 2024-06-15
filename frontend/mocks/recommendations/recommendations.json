@@ -1,0 +1,46 @@
+{
+  "recommendations": [
+    {
+      "drillName": "Kobe Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Beginner",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "Curry Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Intermediate",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "D Rose Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Advanced",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "LBJ Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Intermediate",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "J Suggs Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Beginner",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "Dame Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Intermediate",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    },
+    {
+      "drillName": "Test Drill",
+      "durationOfDrill": "10:00",
+      "difficulty": "Intermediate",
+      "drillImagePath": "assets/images/dashboard_background.png"
+    }
+  ]
+}
