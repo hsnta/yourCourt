@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/recommendations_list.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/customize_workout_button.dart';
+import 'package:frontend/modules/dashboard/components/recommendations/services/recommendation_service.dart';
 
 class RecommendationsBody extends StatefulWidget {
   const RecommendationsBody({super.key});
@@ -10,30 +11,54 @@ class RecommendationsBody extends StatefulWidget {
 }
 
 class _RecommendationsBodyState extends State<RecommendationsBody> {
-  List<Map<String, String>> cardData = [
-    {"title": "Kobe Drill", "description": "10:00", "difficulty": "Beginner"},
-    {"title": "Curry Drill", "description": "10:00", "difficulty": "Intermediate"},
-    {"title": "D Rose Drill", "description": "10:00", "difficulty": "Advanced"},
-    {"title": "LBJ Drill", "description": "10:00", "difficulty": "Intermediate"},
-    {"title": "J Suggs Drill", "description": "10:00", "difficulty": "Beginner"},
-    {"title": "Dame Drill", "description": "10:00", "difficulty": "Intermediate"},
-  ];
+  late RecommendationService graphQLService;
+  List<Map<String, String>> recommendations = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    graphQLService = RecommendationService();
+    _fetchRecommendations();
+  }
+
+  Future<void> _fetchRecommendations() async {
+    try {
+      final fetchedUsers = await graphQLService.fetchAllRecommendations();
+      setState(() {
+        recommendations = fetchedUsers;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Failed to fetch data", style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ));
+      });
+      // Handle error accordingly
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children:  [
         Expanded(
-          child: RecommendationsList(
-            cardData: cardData,
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              :RecommendationsList(
+            cardData: recommendations,
             onReorder: (oldIndex, newIndex) {
               setState(() {
                 if (newIndex > oldIndex) {
                   newIndex -= 1;
                 }
-                final Map<String, String> item = cardData.removeAt(oldIndex);
-                cardData.insert(newIndex, item);
+                final Map<String, String> item = recommendations.removeAt(oldIndex);
+                recommendations.insert(newIndex, item);
               });
             },
           ),

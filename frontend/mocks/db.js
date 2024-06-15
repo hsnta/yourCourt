@@ -1,6 +1,7 @@
 const express = require('express');
 const chats = require('./chats/chats.json');
 const users = require('./users/users.json');
+const recommendations = require('./recommendations/recommendations.json');
 const cors = require('cors');
 const jsonGraphqlExpress = require('json-graphql-server/node');
 
@@ -9,7 +10,8 @@ const PORT = 3000;
 const app = express();
 const data = {
     ...users,
-    ...chats
+    ...chats,
+    ...recommendations,
 };
 
 app.use(cors());
