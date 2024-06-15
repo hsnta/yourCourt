@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/modules/chats/components/chat_search_bar.dart';
 import 'package:frontend/modules/chats/components/chat_list.dart';
-import 'package:frontend/modules/chats/components/chat_error_snackbar.dart';
+import 'package:frontend/shared/components/error_snackbar.dart';
 import 'package:frontend/modules/chats/services/chat_service.dart';
 
 class ChatsBody extends StatefulWidget {
@@ -36,7 +36,7 @@ class ChatsBodyState extends State<ChatsBody> {
       setState(() {
         isLoading = false;
       });
-      ChatErrorSnackbar.show(context, "Failed to fetch data");
+      ErrorSnackbar.show(context, "Failed to fetch data");
     }
   }
 

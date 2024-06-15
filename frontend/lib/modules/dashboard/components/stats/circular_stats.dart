@@ -1,58 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/modules/dashboard/components/stats/circular_count_indicator.dart';
+import 'package:frontend/modules/dashboard/components/stats/count_description_box.dart';
 
 class CircularStats extends StatelessWidget {
   final String countText;
   final String descriptionText;
 
   const CircularStats({
-    Key? key,
+    super.key,
     required this.countText,
     required this.descriptionText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140, // Set the height of the stack
+      height: 140,
       child: Stack(
-        alignment: Alignment.topCenter, // Align everything to the top center
+        alignment: Alignment.topCenter,
         children: [
-          Container(
-            alignment: Alignment.topCenter, // Align the circle and text container to the top center
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white,
-              child: Text(
-                countText,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                ),
-              ),
-            ),
-          ),
+          CircularCountIndicator(countText: countText),
           Positioned(
             top: 80, // Adjust this value to control the overlap
-            child: Container(
-              width: 85,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              padding: EdgeInsets.all(5),
-              child: Text(
-                descriptionText,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            child: CountDescriptionBox(descriptionText: descriptionText),
           ),
         ],
       ),

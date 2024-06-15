@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/recommendations_list.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/customize_workout_button.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/services/recommendation_service.dart';
+import 'package:frontend/shared/components/error_snackbar.dart';
 
 class RecommendationsBody extends StatefulWidget {
   const RecommendationsBody({super.key});
 
   @override
-  _RecommendationsBodyState createState() => _RecommendationsBodyState();
+  RecommendationsBodyState createState() => RecommendationsBodyState();
 }
 
-class _RecommendationsBodyState extends State<RecommendationsBody> {
+class RecommendationsBodyState extends State<RecommendationsBody> {
   late RecommendationService graphQLService;
   List<Map<String, String>> recommendations = [];
   bool isLoading = true;
@@ -32,13 +33,8 @@ class _RecommendationsBodyState extends State<RecommendationsBody> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Failed to fetch data", style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red,
-        ));
+        ErrorSnackbar.show(context, "Failed to fetch data");
       });
-      // Handle error accordingly
-
     }
   }
 

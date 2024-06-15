@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'circular_stats.dart';
+import 'package:frontend/modules/dashboard/components/stats/background_image.dart';
+import 'package:frontend/modules/dashboard/components/stats/circular_stats.dart';
+import 'package:frontend/modules/dashboard/components/stats/greeting_text.dart';
+import 'package:frontend/modules/dashboard/components/stats/progress_bar.dart';
+import 'package:frontend/modules/dashboard/components/stats/progress_text.dart';
+import 'package:frontend/modules/dashboard/components/stats/stats_row.dart';
 
 class Stats extends StatelessWidget {
   const Stats({super.key});
@@ -8,41 +13,29 @@ class Stats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/dashboard_background.png'),
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topCenter),
-          ),
-        ),
+        const BackgroundImage(),
         Container(
           padding: const EdgeInsets.all(20.0),
           child: Container(
             padding: const EdgeInsets.all(15.0),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 1.0),
-                const Text(
-                  'Hi JAREL',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-                const Row(
+                SizedBox(height: 1.0),
+                GreetingText(),
+                SizedBox(height: 20.0),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [CircularStats(
-                    countText: '10',
-                    descriptionText: 'DAYS TILL TRYOUTS',
-                  )]
-                ),
-                const SizedBox(height: 50.0),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    CircularStats(
+                      countText: '10',
+                      descriptionText: 'DAYS TILL TRYOUTS',
+                    ),
+                  ],
+                ),
+                SizedBox(height: 50.0),
+                StatsRow(
+                  stats: [
                     CircularStats(
                       countText: '5',
                       descriptionText: 'DAYS OUT OF MONTH',
@@ -57,36 +50,15 @@ class Stats extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Progress bar
-                Container(
-                  height: 40,
-                  child: LinearProgressIndicator(
-                    backgroundColor: Colors.white,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                    value: 0.5, // Set the value of the progress bar (0.0 to 1.0)
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                const Center(
-                  child: Text(
-                    "7,777 SHOTS LEFT KEEP GOING",
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-
+                SizedBox(height: 20.0),
+                ProgressBar(value: 0.5),
+                SizedBox(height: 5.0),
+                ProgressText(),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
 }
-
-
-
-
