@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'input_score_modal.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/modules/page3/input_results/court_part_button.dart';
+import 'court_constants.dart' as court_constants;
 
 class CourtView extends StatefulWidget {
-  const CourtView();
+  const CourtView({super.key});
 
   @override
   State<CourtView> createState() => _CourtViewState();
@@ -28,26 +29,6 @@ class _CourtViewState extends State<CourtView>
     controller = TransformationController();
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          final appTheme = Theme.of(context);
-
-          return Center(
-              child: Container(
-            height: (MediaQuery.of(context).size.height * 0.25),
-            width: (MediaQuery.of(context).size.width * 0.75),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(16.0),
-              ),
-              color: appTheme.cardColor,
-            ),
-            child: InputScoreModal(),
-          ));
-        });
-  }
 
   @override
   void dispose() {
@@ -58,6 +39,16 @@ class _CourtViewState extends State<CourtView>
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _buildChildWidgets() {
+      final List<Widget> courtPartsWidgets = [];
+      courtPartsWidgets.add(SvgPicture.asset("assets/basketball_no_vectors.svg",
+          fit: BoxFit.cover));
+      court_constants.partToPathMap.keys
+          .map((name) => Positioned.fill(child: CourtPartButton(name)))
+          .forEach((element) => courtPartsWidgets.add(element));
+      return courtPartsWidgets;
+    }
+
     return Column(children: [
       GestureDetector(
           onDoubleTapDown: (details) => tapDownDetails = details,
@@ -80,7 +71,7 @@ class _CourtViewState extends State<CourtView>
 
             animationController.forward(from: 0);
           },
-          onTap: () => _dialogBuilder(context),
+          // onTap: () => _dialogBuilder(context),
           child: InteractiveViewer(
               transformationController: controller,
               clipBehavior: Clip.none,
@@ -89,12 +80,12 @@ class _CourtViewState extends State<CourtView>
               maxScale: 2.5,
               scaleEnabled: true,
               child: AspectRatio(
-                  aspectRatio: 0.6,
+                  aspectRatio: 680 / 1024,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child:
-                        Image.asset("assets/basketball.jpg", fit: BoxFit.cover),
-                  )))),
+                      borderRadius: BorderRadius.circular(25),
+                      child: Material(
+                        child: Stack(children: _buildChildWidgets()),
+                      ))))),
       ElevatedButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text("Finish entering the results"))

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class InputScoreModal extends StatefulWidget {
-  const InputScoreModal({super.key});
+  final String partName;
 
+  const InputScoreModal(this.partName);
   @override
   State<StatefulWidget> createState() => _InputScoreModalState();
 }
@@ -50,7 +51,7 @@ class _InputScoreModalState extends State<InputScoreModal> {
 
     return Column(
       children: [
-        Text("Left Wing", style: theme.textTheme.headlineLarge),
+        Text(widget.partName, style: theme.textTheme.headlineMedium),
         Expanded(
             child: Center(
                 child: Row(
