@@ -1,20 +1,19 @@
-type Query {
-    getDrill(drillId: String!): Drill
-    getDrillsForWorkout(workoutId: String!): [Drill]
-    getDrillsForUser(userId: String!): [Drill]
+type DrillQuery {
+    getDrillById(drillId: String!): Drill
+    getAllDrillsByWorkoutId(workoutId: String!): [Drill]
+    getAllDrillsByUserId(userId: String!): [Drill]
 }
 
-type Mutation {
+type DrillMutation {
     createDrill(drillInput: DrillInput!): Drill
-    updateDrill(drillInput: DrillInput!): Drill
+    updateDrill(shotsTakenModel: ShotsTakenInput!): Drill
 }
 
 input DrillInput {
-    workoutId: String!
     userId: String!
+    workoutId: String!
     drillType: DrillType!
     isSingle: Boolean!
-    shotsTaken: ShotsTakenInput!
     status: DrillStatus!
 }
 
@@ -67,7 +66,7 @@ enum DrillStatus {
 }
 
 type Drill {
-    id: ID!
+    drillId: String!
     workoutId: String!
     userId: String!
     drillType: DrillType!

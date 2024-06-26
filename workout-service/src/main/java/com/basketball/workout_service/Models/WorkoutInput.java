@@ -8,9 +8,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class WorkoutModel {
-    private Long workoutId;
-    private Long userId;
+public class WorkoutInput {
+    private String userId;
     private String name;
     private List<WorkoutType> categories;
     private Date completionTime;

@@ -1,7 +1,5 @@
 package com.basketball.drill_service.Services.Kafka;
 
-import com.basketball.drill_service.Models.DrillEntity;
-import com.basketball.drill_service.Models.DrillModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -13,8 +11,10 @@ public class KafkaConsumerDrillService {
     MessageProcessorDrillService messageProcessorDrillService;
 
     @KafkaListener(topics = "workout_service_topic", groupId = "group_id")
-    public DrillEntity consumeWorkoutServiceDrillCreation(DrillModel drillModel) {
-        return messageProcessorDrillService.createDrill(drillModel);
+    public String consumeWorkoutServiceDrillCreation(String string) {
+        System.out.println(string);
+        return string;
+//        return messageProcessorDrillService.createDrill(drillModel);
     }
 
     @KafkaListener(topics = "user_service_topic", groupId = "group_id")

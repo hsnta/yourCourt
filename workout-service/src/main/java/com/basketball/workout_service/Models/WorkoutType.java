@@ -1,7 +1,7 @@
 package com.basketball.workout_service.Models;
 
 public enum WorkoutType {
-   DRIBBLING,
+    DRIBBLING,
     THREE_PT_SHOTS,
     MID_RANGE_SHOTS,
     FINISHING,

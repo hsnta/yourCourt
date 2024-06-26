@@ -2,36 +2,46 @@ package com.basketball.drill_service.Controllers;
 
 
 import com.basketball.drill_service.Models.DrillEntity;
+import com.basketball.drill_service.Models.DrillInput;
 import com.basketball.drill_service.Models.DrillModel;
 import com.basketball.drill_service.Services.DrillService;
-import graphql.kickstart.tools.GraphQLMutationResolver;
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 @Controller
-public class DrillGraphQLController implements GraphQLQueryResolver, GraphQLMutationResolver {
+public class DrillGraphQLController {
 
     @Autowired
     private DrillService drillService;
 
-    public DrillEntity getDrillById(String id) {
-        return drillService.getDrillById(id);
+    @QueryMapping
+    public DrillEntity getDrillById(@Argument String drillId) {
+        return drillService.getDrillById(drillId);
     }
 
-    public List<DrillEntity> getAllDrillsByWorkoutId(String workoutId) {
+    @QueryMapping
+    public List<DrillEntity> getAllDrillsByWorkoutId(@Argument String workoutId) {
         return drillService.getAllDrillsByWorkoutId(workoutId);
     }
 
-    public List<DrillEntity> getAllDrillsByUserId(String userId) {
+    @QueryMapping
+    public List<DrillEntity> getAllDrillsByUserId(@Argument String userId) {
         return drillService.getAllDrillsByUserId(userId);
     }
 
-    public DrillEntity createDrill(DrillModel drillModel) {
-        return drillService.createDrill(drillModel);
+    @MutationMapping
+    public DrillEntity createDrill(@Argument DrillInput drillInput) {
+        return drillService.createDrill(drillInput);
     }
+
+
+
+
 
     public DrillEntity updateDrill(DrillModel drillModel) {
         return drillService.updateDrill(drillModel);

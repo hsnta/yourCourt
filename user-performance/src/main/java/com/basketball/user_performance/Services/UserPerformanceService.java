@@ -15,8 +15,7 @@ public class UserPerformanceService {
     private UserPerformanceRepository userPerformanceRepository;
 
     public UserPerformanceEntity getUserPerformanceByUserId(String userId) {
-        UserPerformanceEntity entity = userPerformanceRepository.findByUserId(userId);
-        return entity;
+        return userPerformanceRepository.findByUserId(userId);
     }
 
     public UserPerformanceEntity startDailyPerformance(BeginDailyPerformanceRequest beginDailyPerformanceRequest) {
@@ -26,7 +25,6 @@ public class UserPerformanceService {
                 .workoutDate(beginDailyPerformanceRequest.getWorkoutDate())
                 .totalOfWorkoutsCompleted(0)
                 .totalOfDrillsCompleted(0)
-                .workouts(List.of(beginDailyPerformanceRequest.getWorkoutModel()))
                 .build());
         return userPerformanceRepository.save(userPerformanceEntity);
     }
