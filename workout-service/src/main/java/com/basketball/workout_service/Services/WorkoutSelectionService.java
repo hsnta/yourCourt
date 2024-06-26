@@ -1,36 +1,37 @@
 package com.basketball.workout_service.Services;
 
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
-import com.basketball.workout_service.Models.*;
-import com.basketball.workout_service.Repositories.WorkoutRepository;
+import com.basketball.workout_service.Models.WorkoutSelectionEntity;
+import com.basketball.workout_service.Models.WorkoutSelectionModel;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
 import com.basketball.workout_service.WorkoutUtils.WorkoutUtils;
+import com.basketball.workout_service.codegen.types.DrillModel;
+import com.basketball.workout_service.codegen.types.WorkoutSelection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class WorkoutService {
+public class WorkoutSelectionService {
 
-    @Autowired
-    WorkoutRepository workoutRepository;
 
     @Autowired
     WorkoutSelectionRepository workoutSelectionRepository;
 
-    public WorkoutEntity getWorkoutById(String workoutId) {
-        return workoutRepository.findById(workoutId).orElseThrow();
+    public WorkoutSelection getWorkoutSelectionById(String id) {
+        WorkoutSelectionEntity workoutSelectionEntity = workoutSelectionRepository.findById(id).orElseThrow(() ->
+                new WorkoutNotFoundException("Workout selection not found for ID: " + id));
+        return WorkoutSelection.newBuilder().workoutId(workoutSelectionEntity.getWorkoutId())
+                .workoutType(workoutSelectionEntity.getWorkoutType())
+                .drills(workoutSelectionEntity.getDrills())
+                .build();
+
     }
 
-    public List<WorkoutEntity> getAllWorkoutByUserId(String workoutId) {
-        return workoutRepository.findAllByUserId(workoutId);
-    }
-
-    public List<WorkoutSelectionEntity> getAllWorkoutSelection() {
-        return workoutSelectionRepository.findAll();
+    public List<WorkoutSelection> getAllWorkoutSelection() {
+        return List.of(new WorkoutSelection());
     }
 
     public WorkoutSelectionEntity createWorkoutSelection(WorkoutSelectionModel workoutSelectionModel) {
@@ -68,7 +69,7 @@ public class WorkoutService {
         WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutSelectionModel.getWorkoutId())
                 .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
                         workoutSelectionModel.getWorkoutId()));
-        List<com.basketball.workout_service.codegen.types.DrillModel> drills = workoutSelectionModel.getDrills();
+        List<DrillModel> drills = workoutSelectionModel.getDrills();
         workoutSelection.getDrills().forEach(existingDrill -> {
             drills.forEach(updateDrill -> {
                 if (existingDrill.getDrillId().equals(updateDrill.getDrillId())) {
@@ -87,16 +88,4 @@ public class WorkoutService {
         workoutSelection.setDrills(workoutSelection.getDrills());
         return workoutSelectionRepository.save(workoutSelection);
     }
-
-    public WorkoutEntity createWorkout(WorkoutInput workoutInput) {
-        return new WorkoutEntity();
-    }
-
-    public void updateWorkout(WorkoutModel workoutModel) {
-
-    }
-    public void deleteWorkout(String workoutId) {
-
-    }
-
 }

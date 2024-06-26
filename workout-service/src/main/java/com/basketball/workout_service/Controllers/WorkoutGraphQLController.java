@@ -5,9 +5,6 @@ import com.basketball.workout_service.Models.WorkoutEntity;
 import com.basketball.workout_service.Models.WorkoutInput;
 import com.basketball.workout_service.Services.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -19,17 +16,17 @@ public class WorkoutGraphQLController {
     private WorkoutService workoutService;
 
 
-    public WorkoutEntity getWorkoutById(@Argument String workoutId) {
+    public WorkoutEntity getWorkoutById(String workoutId) {
         return workoutService.getWorkoutById(workoutId);
     }
 
 
-    public List<WorkoutEntity> getAllWorkoutsByUserId(@Argument String userId) {
+    public List<WorkoutEntity> getAllWorkoutsByUserId(String userId) {
         return workoutService.getAllWorkoutByUserId(userId);
     }
 
 
-    public WorkoutEntity createWorkout(@Argument WorkoutInput workoutInput) {
+    public WorkoutEntity createWorkout(WorkoutInput workoutInput) {
         return workoutService.createWorkout(workoutInput);
     }
 

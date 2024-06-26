@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.6</version>
+		<version>3.3.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.basketball</groupId>
@@ -31,7 +31,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.2</spring-cloud.version>
-		<netflix-dgs.version>9.0.0</netflix-dgs.version>
+		<netflix-dgs.version>9.0.1</netflix-dgs.version>
 	</properties>
 
 	<dependencies>
@@ -75,22 +75,9 @@
 
 		<dependency>
 			<groupId>com.netflix.graphql.dgs</groupId>
-			<artifactId>graphql-dgs-spring-graphql-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.graphql</groupId>
-			<artifactId>spring-graphql-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.graphql-java-kickstart</groupId>
-			<artifactId>graphql-spring-boot-starter</artifactId>
-			<version>11.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.graphql-java-kickstart</groupId>
-			<artifactId>graphql-java-tools</artifactId>
-			<version>11.1.0</version>
+			<artifactId>graphql-dgs-spring-boot-starter</artifactId>
+			<version>9.0.1</version>
+			<scope>runtime</scope>
 		</dependency>
 
 
@@ -98,17 +85,10 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>1.5.5.Final</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>1.5.5.Final</version>
+			<groupId>com.netflix.graphql.dgs</groupId>
+			<artifactId>graphql-dgs</artifactId>
+			<version>9.0.1</version>
 		</dependency>
 
 	</dependencies>
@@ -156,9 +136,9 @@
 						</goals>
 						<configuration>
 							<schemaPaths>
-								<param>src/main/resources/graphql</param>
+								<param>src/main/resources/schema</param>
 							</schemaPaths>
-							<packageName>com.example.codegen.codegen</packageName>
+							<packageName>com.basketball.workout_service.codegen</packageName>
 							<addGeneratedAnnotation>true</addGeneratedAnnotation>
 						</configuration>
 					</execution>

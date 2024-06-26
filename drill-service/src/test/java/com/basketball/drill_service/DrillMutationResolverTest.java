@@ -40,7 +40,6 @@ public class DrillMutationResolverTest {
                 .userId("user1")
                 .drillType(DrillType.FIVE_STAR_DRILL)
                 .isSingle(true)
-                .shotsTaken(shotsTaken)
                 .status(DrillStatus.CREATED)
                 .build();
         DrillEntity drillEntity = new DrillEntity("1", "workout1", "user1", true,

@@ -1,5 +1,7 @@
 package com.basketball.workout_service.Models;
 
+import com.basketball.workout_service.codegen.types.DrillModel;
+import com.basketball.workout_service.codegen.types.WorkoutType;
 import lombok.Builder;
 import lombok.Data;
 
