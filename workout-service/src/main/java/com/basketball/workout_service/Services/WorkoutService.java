@@ -5,6 +5,7 @@ import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
 import com.basketball.workout_service.WorkoutUtils.WorkoutUtils;
+import com.basketball.workout_service.codegen.types.WorkoutSelection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +34,11 @@ public class WorkoutService {
         return workoutSelectionRepository.findAll();
     }
 
-    public WorkoutSelectionEntity createWorkoutSelection(WorkoutSelectionModel workoutSelectionModel) {
+    public WorkoutSelectionEntity createWorkoutSelection(WorkoutSelection workoutSelection) {
         WorkoutSelectionEntity workoutSelectionEntity = WorkoutSelectionEntity.builder()
                 .workoutId(WorkoutUtils.createUniqueWorkoutSelectionId())
-                .workoutType(workoutSelectionModel.getWorkoutType())
-                .drills(workoutSelectionModel.getDrills())
+                .workoutType(workoutSelection.getWorkoutType())
+                .drills(workoutSelection.getDrills())
                 .createdBy(WorkoutUtils.getUserName())
                 .lastUpdatedBy(WorkoutUtils.getUserName())
                 .lastUpdatedDate(WorkoutUtils.getCurrentSqlTime())
@@ -48,11 +49,11 @@ public class WorkoutService {
         return workoutSelectionRepository.save(workoutSelectionEntity);
     }
 
-    public WorkoutSelectionEntity createDrillForWorkoutSelection(WorkoutSelectionModel workoutUpdateDrillsModel) {
-        WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutUpdateDrillsModel.getWorkoutId())
+    public WorkoutSelectionEntity createDrillForWorkoutSelection(WorkoutSelection workoutUpdateDrill) {
+        WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutUpdateDrill.getWorkoutId())
                 .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
-                        workoutUpdateDrillsModel.getWorkoutId()));
-        List<com.basketball.workout_service.codegen.types.DrillModel> drills = workoutUpdateDrillsModel.getDrills();
+                        workoutUpdateDrill.getWorkoutId()));
+        List<com.basketball.workout_service.codegen.types.DrillModel> drills = workoutUpdateDrill.getDrills();
         drills.forEach(createDrill -> {
             boolean anyMatch = workoutSelection.getDrills().stream().anyMatch(existingDrill -> existingDrill.getDrillType()
                     .equals(createDrill.getDrillType()));
@@ -64,7 +65,7 @@ public class WorkoutService {
         return workoutSelectionRepository.save(workoutSelection);
     }
 
-    public WorkoutSelectionEntity updateDrillTypeInWorkoutSelection(WorkoutSelectionModel workoutSelectionModel) {
+    public WorkoutSelectionEntity updateDrillTypeInWorkoutSelection(WorkoutSelection workoutSelectionModel) {
         WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutSelectionModel.getWorkoutId())
                 .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
                         workoutSelectionModel.getWorkoutId()));
@@ -80,23 +81,11 @@ public class WorkoutService {
         return workoutSelectionRepository.save(workoutSelection);
     }
 
-    public WorkoutSelectionEntity updateWorkoutSelection(WorkoutSelectionModel workoutSelectionModel) {
+    public WorkoutSelectionEntity updateWorkoutSelection(WorkoutSelection workoutSelectionModel) {
         WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutSelectionModel.getWorkoutId())
                 .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
                         workoutSelectionModel.getWorkoutId()));
         workoutSelection.setDrills(workoutSelection.getDrills());
         return workoutSelectionRepository.save(workoutSelection);
     }
-
-    public WorkoutEntity createWorkout(WorkoutInput workoutInput) {
-        return new WorkoutEntity();
-    }
-
-    public void updateWorkout(WorkoutModel workoutModel) {
-
-    }
-    public void deleteWorkout(String workoutId) {
-
-    }
-
 }

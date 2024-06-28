@@ -1,9 +1,8 @@
 package com.basketball.workout_service.Controllers;
 
-import com.basketball.workout_service.Models.WorkoutModel;
 import com.basketball.workout_service.Models.WorkoutSelectionEntity;
-import com.basketball.workout_service.Models.WorkoutSelectionModel;
 import com.basketball.workout_service.Services.WorkoutService;
+import com.basketball.workout_service.codegen.types.WorkoutSelection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +23,13 @@ public class WorkoutSelectionController {
 
     @PostMapping(value = "/createWorkoutSelection")
     public ResponseEntity<WorkoutSelectionEntity> createWorkoutSelection(
-            @RequestBody WorkoutSelectionModel workoutSelectionModel) {
+            @RequestBody WorkoutSelection workoutSelectionModel) {
         return ResponseEntity.ok().body(workoutService.createWorkoutSelection(workoutSelectionModel));
     }
 
     @PostMapping(value = "/createDrillForWorkoutSelection")
     public ResponseEntity<WorkoutSelectionEntity> createDrillForWorkoutSelection(
-            @RequestBody WorkoutSelectionModel workoutSelectionModel) {
+            @RequestBody WorkoutSelection workoutSelectionModel) {
         return ResponseEntity.ok().body(workoutService.createDrillForWorkoutSelection(workoutSelectionModel));
     }
 }

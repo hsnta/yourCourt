@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class DatabaseDefaultFields {
 
+    Boolean isActive;
     Date lastUpdatedDate;
     Date creationDate;
     String lastUpdatedBy;

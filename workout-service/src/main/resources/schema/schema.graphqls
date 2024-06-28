@@ -7,6 +7,11 @@ type Query {
 
 type Mutation {
     createWorkout(WorkoutInput: WorkoutInput!): Workout
+    createWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    createDrillForWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    updateWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    deleteWorkoutSelection(workoutSelectionId: String!): Boolean
+
 }
 
 input WorkoutInput {
@@ -15,6 +20,17 @@ input WorkoutInput {
     categories: [WorkoutType!]!
     completionTime: String!
     status: String!
+}
+
+input WorkoutSelectionInput {
+    workoutId: ID
+    workoutType: WorkoutType
+    drills: [DrillModelInput]
+}
+
+input DrillModelInput {
+    drillType: DrillType
+    isEnabled: Boolean
 }
 
 enum WorkoutType {
@@ -55,6 +71,7 @@ enum DrillType {
     JUMPING
     EXPLOSIVENESS
     LADDER_DRILLS
+    DEFENSIVE_SLIDES
     WALKING_STRETCHES
     STATIC_STRETCHES
 }

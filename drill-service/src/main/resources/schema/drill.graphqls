@@ -1,10 +1,10 @@
-type sQuery {
+type Query {
     getDrillById(drillId: String!): Drill
     getAllDrillsByWorkoutId(workoutId: String!): [Drill]
     getAllDrillsByUserId(userId: String!): [Drill]
 }
 
-type sMutation {
+type Mutation {
     createDrill(drillInput: DrillInput!): Drill
     updateDrill(shotsTakenModel: ShotsTakenInput!): Drill
 }
@@ -30,7 +30,7 @@ input ShotsTakenInput {
     twoPointMiddle: Int!
 }
 
-enum DrillTypee {
+enum DrillType {
     TWO_BALL_DRILLS
     CONE_DRILLS
     CROSSOVERS

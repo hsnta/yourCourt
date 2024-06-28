@@ -12,7 +12,7 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkoutEntity extends DatabaseDefaultFields{
+public class WorkoutEntity extends DatabaseDefaultFields {
 
     @Id
     private Long workoutId;
