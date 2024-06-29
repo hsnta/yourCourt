@@ -1,12 +1,16 @@
 package com.basketball.drill_service.Services;
 
-import com.basketball.drill_service.DrillUtils.DrillUtils;
+import com.basketball.drill_service.Utils.DrillMapper;
+import com.basketball.drill_service.Utils.DrillUtils;
+import com.basketball.drill_service.Exceptions.DrillNotFoundException;
 import com.basketball.drill_service.Models.*;
 import com.basketball.drill_service.Repositories.DrillRepository;
+import com.basketball.drill_service.codegen.types.Drill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DrillService {
@@ -14,40 +18,51 @@ public class DrillService {
     @Autowired
     DrillRepository drillRepository;
 
-    public DrillEntity getDrillById(String drillId) {
-        return drillRepository.findById(drillId).orElseThrow();
+    @Autowired
+    DrillMapper drillMapper;
+
+    public Drill getDrillById(String drillId) {
+        return drillMapper.toDto(drillRepository.findById(drillId).orElseThrow());
     }
 
-    public List<DrillEntity> getAllDrillsByWorkoutId(String workoutId) {
-        return drillRepository.findAllByWorkoutId(workoutId);
+    public List<Drill> getAllDrillsByWorkoutId(String workoutId) {
+        return drillRepository.findAllByWorkoutId(workoutId).stream()
+                .map(drillMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<DrillEntity> getAllDrillsByUserId(String workoutId) {
-        return drillRepository.findAllByUserId(workoutId);
+    public List<Drill> getAllDrillsByUserId(String workoutId) {
+        return drillRepository.findAllByUserId(workoutId).stream()
+                .map(drillMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public DrillEntity createDrill(DrillInput drillInput) {
-        DrillEntity drillEntity = drillRepository.findById("0").orElse(
-                DrillEntity.builder()
-                        .drillId(DrillUtils.createUniqueDrillId())
-                        .userId(drillInput.getUserId())
-                        .workoutId(drillInput.getWorkoutId())
-                        .drillType(drillInput.getDrillType())
-                        .isSingle(drillInput.getIsSingle())
-                        .shotsTaken(new ShotsTakenModel())
-                        .status(DrillStatus.CREATED)
-                        .build());
-        return drillRepository.save(drillEntity);
+    public Drill createDrill(Drill drill) {
+        DrillEntity drillEntity = drillMapper.toEntity(drill);
+        drillEntity.setDrillId(DrillUtils.createUniqueDrillId());
+        drillEntity.setIsActive(true);
+        drillEntity.setCreatedBy(DrillUtils.getUserName());
+        drillEntity.setCreationDate(DrillUtils.getCurrentSqlTime());
+        updateBaseDefaultFields(drillEntity);
+        return drillMapper.toDto(drillRepository.save(drillEntity));
     }
 
-    public DrillEntity updateDrill(DrillModel drillModel) {
-        DrillEntity drillEntity = drillRepository.findById(drillModel.getId()).orElseThrow();
-        drillEntity.setStatus(drillModel.getStatus());
-        return drillRepository.save(drillEntity);
+    public Drill updateDrill(Drill drill) {
+        DrillEntity drillEntity = drillRepository.findById(drill.getDrillId()).orElseThrow(() ->
+                new DrillNotFoundException("Drill not found for ID: " + drill.getDrillId()));
+        updateBaseDefaultFields(drillEntity);
+        return drillMapper.toDto(drillRepository.save(drillEntity));
     }
 
-    public void deleteDrill(String id) {
-        DrillEntity drillEntity = drillRepository.findById(id).orElseThrow();
-        drillRepository.delete(drillEntity);
+    public Boolean deleteDrill(String id) {
+        drillRepository.findById(id).orElseThrow(() ->
+                        new DrillNotFoundException("Drill not found for ID: " + id))
+                .setIsActive(false);
+        return true;
+    }
+
+    private static void updateBaseDefaultFields(DrillEntity drillEntity) {
+        drillEntity.setLastUpdatedBy(DrillUtils.getUserName());
+        drillEntity.setLastUpdatedDate(DrillUtils.getCurrentSqlTime());
     }
 }

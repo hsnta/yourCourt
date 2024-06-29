@@ -4,13 +4,12 @@ import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
-import com.basketball.workout_service.WorkoutUtils.WorkoutUtils;
+import com.basketball.workout_service.Utils.WorkoutUtils;
 import com.basketball.workout_service.codegen.types.WorkoutSelection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

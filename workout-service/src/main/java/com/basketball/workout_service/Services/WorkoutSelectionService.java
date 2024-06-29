@@ -3,11 +3,10 @@ package com.basketball.workout_service.Services;
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Models.WorkoutSelectionEntity;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
-import com.basketball.workout_service.WorkoutUtils.WorkoutMapper;
-import com.basketball.workout_service.WorkoutUtils.WorkoutUtils;
+import com.basketball.workout_service.Utils.WorkoutMapper;
+import com.basketball.workout_service.Utils.WorkoutUtils;
 import com.basketball.workout_service.codegen.types.DrillModel;
 import com.basketball.workout_service.codegen.types.WorkoutSelection;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,8 @@ public class WorkoutSelectionService {
     }
 
     public List<WorkoutSelection> getAllWorkoutSelection() {
-        List<WorkoutSelectionEntity> selectionEntities = workoutSelectionRepository.findAll();
-        return selectionEntities.stream()
-                .map(workoutSelectionEntity -> workoutMapper.toDto(workoutSelectionEntity))
+        return workoutSelectionRepository.findAll().stream()
+                .map(workoutMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -45,8 +43,7 @@ public class WorkoutSelectionService {
         workoutSelectionEntity.setCreatedBy(WorkoutUtils.getUserName());
         workoutSelectionEntity.setCreationDate(WorkoutUtils.getCurrentSqlTime());
         updateBaseDefaultFields(workoutSelectionEntity);
-        workoutSelectionRepository.save(workoutSelectionEntity);
-        return workoutMapper.toDto(workoutSelectionEntity);
+        return workoutMapper.toDto(workoutSelectionRepository.save(workoutSelectionEntity));
     }
 
     public WorkoutSelection createDrillForWorkoutSelection(WorkoutSelection workoutUpdateDrillsModel) {

@@ -1,18 +1,18 @@
-package com.basketball.drill_service.Services.Kafka;
+package com.basketball.user_service.Services.Kafka;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaProducerDrillService {
-    private static final String TOPIC = "drill_service_topic";
+public class KafkaProducerUserService {
+    private static final String TOPIC = "user_service_topic";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public String sendMessage(String message) {
+    public void sendMessage(String message) {
         kafkaTemplate.send(TOPIC, message);
-        return "Message to " + TOPIC + " " + message + " successfully sent";
     }
 }

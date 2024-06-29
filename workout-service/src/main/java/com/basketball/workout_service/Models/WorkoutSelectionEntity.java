@@ -1,7 +1,5 @@
 package com.basketball.workout_service.Models;
 
-
-
 import com.basketball.workout_service.codegen.types.DrillModel;
 import com.basketball.workout_service.codegen.types.WorkoutType;
 import lombok.AllArgsConstructor;
@@ -17,9 +15,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-@Document(collection = "WORKOUT_SELECTION")
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "WORKOUT_SELECTION")
 public class WorkoutSelectionEntity extends DatabaseDefaultFields{
 
     @Id

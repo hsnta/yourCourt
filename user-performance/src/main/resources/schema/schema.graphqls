@@ -1,0 +1,24 @@
+type Query {
+    getUserPerformanceById(userPerformanceId: ID!): UserPerformance
+    getUserPerformanceByUserId(userId: String!): UserPerformance
+    getAllUserPerformance: [UserPerformance]
+}
+
+# Define the mutations
+type Mutation {
+    createUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
+    updateUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
+    deleteUserPerformance(userPerformanceId: ID!): Boolean
+}
+
+input UserPerformanceInput {
+    totalOfWorkoutCompleted: Int
+    totalOfDrillsCompleted: Int
+}
+
+type UserPerformance {
+    userPerformanceId: String!
+    userId: String!
+    totalOfWorkoutCompleted: Int!
+    totalOfDrillsCompleted: Int!
+}

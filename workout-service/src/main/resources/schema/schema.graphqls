@@ -1,12 +1,14 @@
 type Query {
     getWorkoutById(workoutId: String!): Workout
     getAllWorkoutByUserId(userId: String!): [Workout]
+
     getWorkoutSelectionById(workoutSelectionId: String!): WorkoutSelection
     getAllWorkoutSelection: [WorkoutSelection]
 }
 
 type Mutation {
     createWorkout(WorkoutInput: WorkoutInput!): Workout
+
     createWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
     createDrillForWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
     updateWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
