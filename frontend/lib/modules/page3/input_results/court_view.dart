@@ -22,7 +22,7 @@ class _CourtViewState extends State<CourtView>
   void initState() {
     super.initState();
     animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300))
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 300))
           ..addListener(() {
             controller.value = animation!.value;
           });
@@ -52,74 +52,62 @@ class _CourtViewState extends State<CourtView>
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Stack(children: [
-        GestureDetector(
-            onDoubleTapDown: (details) => tapDownDetails = details,
-            onDoubleTap: () {
-              final position = tapDownDetails!.localPosition;
-              const scale = 2.5;
-              final x = -position.dx * (scale - 1);
-              final y = -position.dy * (scale - 1);
-              final zoomed = Matrix4.identity()
-                ..translate(x, y)
-                ..scale(scale);
-              final end =
-                  controller.value.isIdentity() ? zoomed : Matrix4.identity();
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        IconButton(
+          icon: const Icon(Icons.close),
+          iconSize: 40.0,
+          color: Colors.white,
+          padding: const EdgeInsets.all(10.0),
+          onPressed: () => Navigator.of(context).pop(),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+      ]),
+      GestureDetector(
+          onDoubleTapDown: (details) => tapDownDetails = details,
+          onDoubleTap: () {
+            final position = tapDownDetails!.localPosition;
+            const scale = 1.5;
+            final x = -position.dx * (scale - 1);
+            final y = -position.dy * (scale - 1);
+            final zoomed = Matrix4.identity()
+              ..translate(x, y)
+              ..scale(scale);
+            final end =
+                controller.value.isIdentity() ? zoomed : Matrix4.identity();
 
-              animation = Matrix4Tween(
-                begin: controller.value,
-                end: end,
-              ).animate(CurvedAnimation(
-                  parent: animationController, curve: Curves.easeIn));
+            animation = Matrix4Tween(
+              begin: controller.value,
+              end: end,
+            ).animate(CurvedAnimation(
+                parent: animationController, curve: Curves.easeIn));
 
-              animationController.forward(from: 0);
-            },
-            // onTap: () => _dialogBuilder(context),
-            child: InteractiveViewer(
-                transformationController: controller,
-                clipBehavior: Clip.none,
-                panEnabled: true,
-                minScale: 1,
-                maxScale: 2.5,
-                scaleEnabled: true,
-                child: AspectRatio(
-                    aspectRatio: 680 / 1024,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
-                        child: Material(
-                          child: Stack(children: _buildChildWidgets()),
-                        ))))),
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          IconButton(
-            icon: Icon(Icons.close),
-            iconSize: 40.0,
-            color: Colors.white,
-            padding: EdgeInsets.all(10.0),
-            onPressed: () => Navigator.of(context).pop(),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ),
-        ]),
-        Positioned.fill(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              onPressed: () => Navigator.of(context).pop(),
-              backgroundColor: Colors.green,
-              shape: const CircleBorder(),
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ))
-        // ElevatedButton(
-        //     onPressed: () => Navigator.of(context).pop(),
-        //     child: Text("Finish entering the results"))
-      ])
+            animationController.forward(from: 0);
+          },
+          child: InteractiveViewer(
+              transformationController: controller,
+              clipBehavior: Clip.none,
+              panEnabled: true,
+              minScale: 1,
+              maxScale: 1.5,
+              scaleEnabled: true,
+              child: AspectRatio(
+                  aspectRatio: 680 / 1024,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Material(
+                        child: Stack(children: _buildChildWidgets()),
+                      ))))),
+      FloatingActionButton(
+        onPressed: () => Navigator.of(context).pop(),
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
+      ),
     ]);
   }
 }

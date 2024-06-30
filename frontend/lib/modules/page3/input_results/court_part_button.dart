@@ -14,13 +14,14 @@ class CourtPartButton extends StatefulWidget {
 class _CourtPartButtonState extends State<CourtPartButton>
     with SingleTickerProviderStateMixin {
   bool _isPressed = false;
+  int score = 0;
   late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 250),
       vsync: this,
     );
   }
@@ -31,8 +32,14 @@ class _CourtPartButtonState extends State<CourtPartButton>
     super.dispose();
   }
 
+  void setScore(int score) {
+    setState(() {
+      this.score = score;
+    });
+  }
+
   Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
+    return showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
           final appTheme = Theme.of(context);
@@ -47,7 +54,7 @@ class _CourtPartButtonState extends State<CourtPartButton>
               ),
               color: appTheme.cardColor,
             ),
-            child: InputScoreModal(widget.partName),
+            child: InputScoreModal(widget.partName, score, setScore),
           ));
         });
   }
@@ -60,12 +67,12 @@ class _CourtPartButtonState extends State<CourtPartButton>
   }
 
   void _handleTapUp(TapUpDetails details) {
-    setState(() {
-      _isPressed = false;
+    Future.delayed(const Duration(milliseconds: 300), () {
+      setState(() {
+        _isPressed = false;
+      });
+      _animationController.reverse();
     });
-    _animationController.reverse();
-    // Add your onPressed logic here
-    print('Button Pressed');
   }
 
   void _handleTapCancel() {
@@ -112,9 +119,9 @@ class _CourtPartButtonState extends State<CourtPartButton>
                   Positioned(
                     left: bounds.left + (bounds.width / 2) - 10,
                     top: bounds.top + (bounds.height / 2) - 20,
-                    child: const Text(
-                      '10',
-                      style: TextStyle(
+                    child: Text(
+                      score.toString(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
