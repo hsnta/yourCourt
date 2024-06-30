@@ -14,7 +14,6 @@ public class MessageProcessorDrillService {
     private KafkaProducerDrillService kafkaProducerDrillService;
 
     public void getExampleWorkoutData(String message) {
-        String serviceAUrl = "http://localhost:8765/api/workout/exampleWorkout";
-        System.out.println("Data from Service B: ");
+        System.out.println("Data from Service B: " + message);
     }
 }

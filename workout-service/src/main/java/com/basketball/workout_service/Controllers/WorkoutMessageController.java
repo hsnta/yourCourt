@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-public class DgsWorkoutMessageController {
+public class WorkoutMessageController {
 
     @Autowired
     private KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     public void sendMessage(@RequestBody String workoutId) {
-        kafkaProducerWorkoutService.askForDrillCreation(workoutId);
+        kafkaProducerWorkoutService.sendMessage(workoutId);
     }
 }

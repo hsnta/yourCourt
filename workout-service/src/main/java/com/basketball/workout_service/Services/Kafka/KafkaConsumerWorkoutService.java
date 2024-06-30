@@ -12,16 +12,16 @@ public class KafkaConsumerWorkoutService {
 
     @KafkaListener(topics = "drill_service_topic", groupId = "group_id")
     public void consumeDrillService(String message) {
-        messageProcessorWorkoutService.getExampleWorkoutData(message);
+        messageProcessorWorkoutService.getMessage(message);
     }
 
     @KafkaListener(topics = "user_service_topic", groupId = "group_id")
     public void consumeUserService(String message) {
-        messageProcessorWorkoutService.getExampleWorkoutData(message);
+        messageProcessorWorkoutService.getMessage(message);
     }
 
     @KafkaListener(topics = "user_performance_service_topic", groupId = "group_id")
     public void consumeUserPerformanceService(String message) {
-        messageProcessorWorkoutService.getExampleWorkoutData(message);
+        messageProcessorWorkoutService.getMessage(message);
     }
 }

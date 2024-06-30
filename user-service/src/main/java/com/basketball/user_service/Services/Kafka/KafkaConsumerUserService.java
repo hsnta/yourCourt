@@ -10,9 +10,9 @@ public class KafkaConsumerUserService {
     @Autowired
     MessageProcessorUserService messageProcessorUserService;
 
-    @KafkaListener(topics = "example_topic", groupId = "group_id")
+    @KafkaListener(topics = "drill_service_topic", groupId = "group_id")
     public void consume(String message) {
-        messageProcessorUserService.getExampleWorkoutData(message);
+        messageProcessorUserService.getMessage(message);
 
     }
 }

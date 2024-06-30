@@ -11,7 +11,7 @@ public class KafkaProducerWorkoutService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void askForDrillCreation(String workoutId) {
+    public void sendMessage(String workoutId) {
         kafkaTemplate.send(TOPIC, workoutId);
     }
 }

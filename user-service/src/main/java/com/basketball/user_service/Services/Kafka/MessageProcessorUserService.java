@@ -10,8 +10,7 @@ public class MessageProcessorUserService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public void getExampleWorkoutData(String message) {
-        String serviceAUrl = "http://localhost:8765/api/workout/exampleWorkout";
-        System.out.println("Data from Service B: ");
+    public void getMessage(String message) {
+        System.out.println("Data from Service B: " + message);
     }
 }

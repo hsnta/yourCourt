@@ -13,6 +13,7 @@ public class KafkaProducerDrillService {
 
     public String sendMessage(String message) {
         kafkaTemplate.send(TOPIC, message);
-        return "Message to " + TOPIC + " " + message + " successfully sent";
+        System.out.println("Message to " + TOPIC + " " + message + " successfully sent");
+        return message;
     }
 }
