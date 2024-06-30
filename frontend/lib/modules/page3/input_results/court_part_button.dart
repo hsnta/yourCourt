@@ -83,74 +83,47 @@ class _CourtPartButtonState extends State<CourtPartButton>
       onTapCancel: _handleTapCancel,
       onTap: () => _dialogBuilder(context),
       child: ClipPath(
-        clipper: CourtPartsClipper(widget.partName),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 50),
-          curve: Curves.easeOut,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 3),
-            boxShadow: _isPressed
-                ? []
-                : [
-                    BoxShadow(
-                      color: Colors.black26.withOpacity(0.2),
-                      offset: Offset(4, 4),
-                      blurRadius: 10,
+          clipper: CourtPartsClipper(widget.partName),
+          child: LayoutBuilder(builder: (context, constraints) {
+            final Size size = constraints.biggest;
+            final path = CourtPartsClipper(widget.partName).getClip(size);
+            final bounds = path.getBounds();
+
+            return AnimatedContainer(
+                duration: const Duration(milliseconds: 50),
+                curve: Curves.easeOut,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 3),
+                  boxShadow: _isPressed
+                      ? []
+                      : [
+                          BoxShadow(
+                            color: Colors.black26.withOpacity(0.2),
+                            offset: Offset(4, 4),
+                            blurRadius: 10,
+                          ),
+                        ],
+                ),
+                child: Stack(children: [
+                  Positioned.fill(
+                      child: CustomPaint(
+                    painter: BorderPainter(widget.partName),
+                  )),
+                  Positioned(
+                    left: bounds.left + (bounds.width / 2) - 10,
+                    top: bounds.top + (bounds.height / 2) - 20,
+                    child: const Text(
+                      '10',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NBA',
+                      ),
                     ),
-                  ],
-          ),
-          child: CustomPaint(
-            painter: BorderPainter(widget.partName),
-          ),
-        ),
-      ),
+                  ),
+                ]));
+          })),
     );
   }
 }
-
-// class _CourtPartButtonState extends State<CourtPartButton> {
-//   bool _isPressed = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ClipPath(
-//       clipper: Middle3PtClipper(),
-//       child: GestureDetector(
-//         onTapDown: (_) {
-//           setState(() {
-//             _isPressed = true;
-//             print('Button Pressed');
-//           });
-//         },
-//         onTapUp: (_) {
-//           setState(() {
-//             _isPressed = false;
-//             print('Button Unpressed');
-//           });
-//         },
-//         onTapCancel: () {
-//           setState(() {
-//             _isPressed = false;
-//             print('Button Canceled');
-//           });
-//         },
-//         child: AnimatedContainer(
-//           duration: Duration(milliseconds: 50),
-//           curve: Curves.easeOut,
-//           decoration: BoxDecoration(
-//             border: Border.all(),
-//             boxShadow: _isPressed
-//                 ? []
-//                 : [
-//                     const BoxShadow(
-//                       color: Colors.black26,
-//                       offset: Offset(4, 4),
-//                       blurRadius: 10,
-//                     ),
-//                   ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
