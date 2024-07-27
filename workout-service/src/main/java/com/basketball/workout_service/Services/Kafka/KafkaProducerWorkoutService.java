@@ -18,13 +18,13 @@ public class KafkaProducerWorkoutService {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    private KafkaTemplate<String, DrillCreationRequest> drillTemplate;
+    private KafkaTemplate<String, DrillCreationRequest> drillKafkaTemplate;
 
     public void sendMessage(String workoutId) {
         kafkaTemplate.send(TOPIC, workoutId);
     }
 
     public void sendDrillsToDrillService(DrillCreationRequest drillCreationRequest) {
-        drillTemplate.send(CREATE_DRILLS_FROM_WORKOUT_SELECTION, drillCreationRequest);
+        drillKafkaTemplate.send(CREATE_DRILLS_FROM_WORKOUT_SELECTION, drillCreationRequest);
     }
 }

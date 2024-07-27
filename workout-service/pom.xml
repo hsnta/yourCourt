@@ -104,7 +104,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.basketball</groupId>
-			<artifactId>codegen-service</artifactId>
+			<artifactId>codegen-lib</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.basketball</groupId>
-	<artifactId>codegen-service</artifactId>
+	<artifactId>codegen-lib</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>codegen-service</name>
 	<description>Codegen service</description>

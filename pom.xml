@@ -13,7 +13,7 @@
 		<module>drill-service</module>
 		<module>user-service</module>
 		<module>workout-service</module>
-		<module>codegen-service</module>
+		<module>codegen-lib</module>
 	</modules>
 
 </project>

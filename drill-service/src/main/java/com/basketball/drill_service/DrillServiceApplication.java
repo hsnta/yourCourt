@@ -12,9 +12,4 @@ public class DrillServiceApplication {
 		SpringApplication.run(DrillServiceApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
 }
