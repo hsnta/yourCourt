@@ -5,8 +5,8 @@ import com.basketball.workout_service.Models.WorkoutSelectionEntity;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
 import com.basketball.workout_service.Utils.WorkoutMapper;
 import com.basketball.workout_service.Utils.WorkoutUtils;
-import com.basketball.workout_service.codegen.types.DrillModel;
-import com.basketball.workout_service.codegen.types.WorkoutSelection;
+import com.basketball.codegen_service.codegen.types.WorkoutSelection;
+import com.basketball.codegen_service.codegen.types.DrillModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

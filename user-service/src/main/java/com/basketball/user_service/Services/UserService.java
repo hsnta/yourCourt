@@ -1,10 +1,10 @@
 package com.basketball.user_service.Services;
+import com.basketball.codegen_service.codegen.types.User;
 import com.basketball.user_service.Exceptions.UserNotFoundException;
 import com.basketball.user_service.Models.UserEntity;
 import com.basketball.user_service.Utils.UserMapper;
 import com.basketball.user_service.Repositories.UserRepository;
 import com.basketball.user_service.Utils.UserUtils;
-import com.basketball.user_service.codegen.types.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

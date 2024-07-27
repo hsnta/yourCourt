@@ -1,7 +1,8 @@
 package com.basketball.drill_service.Utils;
 
+import com.basketball.codegen_service.codegen.types.Drill;
 import com.basketball.drill_service.Models.DrillEntity;
-import com.basketball.drill_service.codegen.types.Drill;
+
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

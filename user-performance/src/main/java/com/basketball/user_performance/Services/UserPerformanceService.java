@@ -1,11 +1,12 @@
 package com.basketball.user_performance.Services;
 
+import com.basketball.codegen_service.codegen.types.UserPerformance;
 import com.basketball.user_performance.Exceptions.UserPerformanceNotFoundException;
 import com.basketball.user_performance.Models.UserPerformanceEntity;
 import com.basketball.user_performance.Repositories.UserPerformanceRepository;
 import com.basketball.user_performance.Utils.UserPerformanceMapper;
 import com.basketball.user_performance.Utils.UserPerformanceUtils;
-import com.basketball.workout_service.codegen.types.UserPerformance;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

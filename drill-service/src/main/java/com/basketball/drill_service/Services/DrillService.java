@@ -1,18 +1,21 @@
 package com.basketball.drill_service.Services;
 
+import com.basketball.codegen_service.codegen.types.Drill;
+import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
+import com.basketball.codegen_service.codegen.types.DrillModel;
+import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import com.basketball.drill_service.Utils.DrillMapper;
 import com.basketball.drill_service.Utils.DrillUtils;
 import com.basketball.drill_service.Exceptions.DrillNotFoundException;
 import com.basketball.drill_service.Models.*;
 import com.basketball.drill_service.Repositories.DrillRepository;
-import com.basketball.drill_service.codegen.types.Drill;
-import com.basketball.drill_service.codegen.types.DrillType;
-import com.basketball.drill_service.codegen.types.ShotsTaken;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +56,30 @@ public class DrillService {
         return drillMapper.toDto(drillRepository.save(drillEntity));
     }
 
+    public List<Drill> createDrillFromWorkoutSelection(DrillCreationRequest drillCreationRequest) {
+        List<DrillEntity> drillEntityList = new ArrayList<>();
+
+        drillCreationRequest.getDrills().forEach(drillModel -> {
+            drillEntityList.add(DrillEntity.builder()
+                    .userId(drillCreationRequest.getUserId())
+                    .workoutId(drillCreationRequest.getWorkoutId())
+                    .drillType(drillModel.getDrillType())
+                    .drillId(DrillUtils.createUniqueDrillId())
+                    .isActive(true)
+                    .createdBy(DrillUtils.getUserName())
+                    .creationDate(DrillUtils.getCurrentSqlTime())
+                    .shotsRequired(new ShotsTaken())
+                    .shotsToBeTaken(new ShotsTaken())
+                    .shotsMade(new ShotsTaken())
+                    .build());
+
+        });
+        drillRepository.saveAll(drillEntityList);
+        return drillEntityList.stream()
+                .map(drillMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     public DrillEntity allZonesExceptLayups(ShotsTaken shotsRequired, String drillId, Integer numberOfShots) {
         DrillEntity drillEntity = drillRepository.findById(drillId).orElseThrow(() ->
                 new DrillNotFoundException("Drill not found for ID: " + drillId));
@@ -79,7 +106,6 @@ public class DrillService {
 //    public void dskmsdk() {
 //        Map<String, List<Integer>>
 //    }
-
 
 
     private static void updateBaseDefaultFields(DrillEntity drillEntity) {

@@ -1,8 +1,8 @@
 package com.basketball.drill_service.Models;
 
-import com.basketball.drill_service.codegen.types.DrillStatus;
-import com.basketball.drill_service.codegen.types.DrillType;
-import com.basketball.drill_service.codegen.types.ShotsTaken;
+import com.basketball.codegen_service.codegen.types.DrillStatus;
+import com.basketball.codegen_service.codegen.types.DrillType;
+import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

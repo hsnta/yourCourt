@@ -1,7 +1,7 @@
 package com.basketball.user_performance.Utils;
 
+import com.basketball.codegen_service.codegen.types.UserPerformance;
 import com.basketball.user_performance.Models.UserPerformanceEntity;
-import com.basketball.workout_service.codegen.types.UserPerformance;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

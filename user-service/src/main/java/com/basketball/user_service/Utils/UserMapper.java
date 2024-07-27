@@ -1,7 +1,7 @@
 package com.basketball.user_service.Utils;
 
+import com.basketball.codegen_service.codegen.types.User;
 import com.basketball.user_service.Models.UserEntity;
-import com.basketball.user_service.codegen.types.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

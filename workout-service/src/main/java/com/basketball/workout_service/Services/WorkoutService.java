@@ -1,12 +1,14 @@
 package com.basketball.workout_service.Services;
 
+import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
+import com.basketball.codegen_service.codegen.types.WorkoutBySelection;
+import com.basketball.codegen_service.codegen.types.WorkoutSelection;
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
 import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
+import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
 import com.basketball.workout_service.Utils.WorkoutUtils;
-import com.basketball.workout_service.codegen.types.*;
-import com.basketball.workout_service.codegen.types.WorkoutType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class WorkoutService {
 
     @Autowired
     WorkoutSelectionRepository workoutSelectionRepository;
+
+    @Autowired
+    KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     public WorkoutEntity getWorkoutById(String workoutId) {
         return workoutRepository.findById(workoutId).orElseThrow();
@@ -54,8 +59,13 @@ public class WorkoutService {
                     .build();
             updateBaseDefaultFields(workoutEntity);
             workoutEntityList.add(workoutEntity);
+            DrillCreationRequest drillCreationRequest = DrillCreationRequest.newBuilder()
+                    .workoutId(workoutEntity.getWorkoutId())
+                    .userId(workoutEntity.getUserId())
+                    .drills(workoutSelection.getDrills())
+                    .build();
+            kafkaProducerWorkoutService.sendDrillsToDrillService(drillCreationRequest);
             workoutRepository.save(workoutEntity);
-            workoutSelection.getDrills();
         });
         return workoutEntityList;
     }

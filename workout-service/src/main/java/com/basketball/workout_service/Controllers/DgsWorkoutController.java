@@ -5,9 +5,7 @@ import com.basketball.workout_service.Models.WorkoutEntity;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
 import com.basketball.workout_service.Services.WorkoutSelectionService;
 import com.basketball.workout_service.Services.WorkoutService;
-import com.basketball.workout_service.codegen.types.WorkoutBySelection;
-import com.basketball.workout_service.codegen.types.WorkoutBySelectionInput;
-import com.basketball.workout_service.codegen.types.WorkoutSelection;
+import com.basketball.codegen_service.codegen.types.WorkoutBySelection;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -27,7 +25,7 @@ public class DgsWorkoutController {
     KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     @DgsMutation
-    public List<WorkoutEntity> createWorkoutByWorkoutSelection(@InputArgument("workoutSelectionInput")
+    public List<WorkoutEntity> createWorkoutByWorkoutSelection(@InputArgument("workoutBySelectionInput")
                                                                    WorkoutBySelection workoutSelectionInput) {
         try {
             return workoutService.createWorkoutByWorkoutSelection(workoutSelectionInput);

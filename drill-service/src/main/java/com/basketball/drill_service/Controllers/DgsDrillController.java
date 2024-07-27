@@ -1,8 +1,9 @@
 package com.basketball.drill_service.Controllers;
 
+import com.basketball.codegen_service.codegen.types.Drill;
 import com.basketball.drill_service.Services.DrillService;
 import com.basketball.drill_service.Services.Kafka.KafkaProducerDrillService;
-import com.basketball.drill_service.codegen.types.Drill;
+
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;

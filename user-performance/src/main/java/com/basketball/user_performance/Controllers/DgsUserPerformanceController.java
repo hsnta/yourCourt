@@ -1,9 +1,9 @@
 package com.basketball.user_performance.Controllers;
 
+import com.basketball.codegen_service.codegen.types.UserPerformance;
 import com.basketball.user_performance.Exceptions.UserPerformanceNotFoundException;
 import com.basketball.user_performance.Services.Kafka.KafkaProducerUserPerformanceService;
 import com.basketball.user_performance.Services.UserPerformanceService;
-import com.basketball.workout_service.codegen.types.UserPerformance;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;

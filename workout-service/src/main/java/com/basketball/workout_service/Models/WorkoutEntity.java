@@ -1,13 +1,13 @@
 package com.basketball.workout_service.Models;
 
-import com.basketball.workout_service.codegen.types.WorkoutType;
+import com.basketball.codegen_service.codegen.types.WorkoutType;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data

@@ -3,7 +3,7 @@ package com.basketball.workout_service.Controllers;
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
 import com.basketball.workout_service.Services.WorkoutSelectionService;
-import com.basketball.workout_service.codegen.types.WorkoutSelection;
+import com.basketball.codegen_service.codegen.types.WorkoutSelection;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
