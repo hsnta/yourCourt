@@ -31,6 +31,19 @@ input ShotsTakenInput {
     twoPointMiddle: Int!
 }
 
+input ShotsTakenThresholdsInput {
+    threePointLeftCorner: [Int]!
+    threePointRightCorner: [Int]!
+    threePointLeftWing: [Int]!
+    threePointRightWing: [Int]!
+    threePointMiddle: [Int]!
+    twoPointLeftCorner: [Int]!
+    twoPointRightCorner: [Int]!
+    twoPointLeftWing: [Int]!
+    twoPointRightWing: [Int]!
+    twoPointMiddle: [Int]!
+}
+
 enum DrillType {
     TWO_BALL_DRILLS
     CONE_DRILLS
@@ -73,6 +86,8 @@ type Drill {
     drillType: DrillType!
     isSingle: Boolean!
     shotsTaken: ShotsTaken
+    shotsMade: ShotsTaken
+    shotsRequired: ShotsTaken
     status: DrillStatus!
 }
 
@@ -87,4 +102,17 @@ type ShotsTaken {
     twoPointLeftWing: Int!
     twoPointRightWing: Int!
     twoPointMiddle: Int!
+}
+
+type ShotsTakenThresholds {
+    threePointLeftCorner: [Int]!
+    threePointRightCorner: [Int]!
+    threePointLeftWing: [Int]!
+    threePointRightWing: [Int]!
+    threePointMiddle: [Int]!
+    twoPointLeftCorner: [Int]!
+    twoPointRightCorner: [Int]!
+    twoPointLeftWing: [Int]!
+    twoPointRightWing: [Int]!
+    twoPointMiddle: [Int]!
 }

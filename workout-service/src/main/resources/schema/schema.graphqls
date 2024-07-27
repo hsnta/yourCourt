@@ -8,6 +8,7 @@ type Query {
 
 type Mutation {
     createWorkout(WorkoutInput: WorkoutInput!): Workout
+    createWorkoutByWorkoutSelection(workoutSelectionInput: [WorkoutBySelectionInput]!): [Workout]
 
     createWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
     createDrillForWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
@@ -24,6 +25,11 @@ input WorkoutInput {
     categories: [WorkoutType!]!
     completionTime: String!
     status: String!
+}
+
+input WorkoutBySelectionInput {
+    workoutSelectionList: [WorkoutSelectionInput]!
+    userId: String!
 }
 
 input WorkoutSelectionInput {
@@ -85,7 +91,7 @@ type Workout {
     userId: String!
     name: String!
     categories: [String!]!
-    completionTime: String! # Assuming ISO 8601 date format
+    completionTime: String!
     status: String!
 }
 
@@ -103,4 +109,9 @@ type WorkoutSelection {
     creationDate: String
     lastUpdatedBy: String
     createdBy: String
+}
+
+type WorkoutBySelection {
+    workoutSelectionList: [WorkoutSelection]!
+    userId: String!
 }

@@ -1,8 +1,10 @@
 package com.basketball.workout_service.Models;
 
+import com.basketball.workout_service.codegen.types.WorkoutType;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
@@ -12,13 +14,14 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "WORKOUT")
 public class WorkoutEntity extends DatabaseDefaultFields {
 
     @Id
-    private Long workoutId;
-    private Long userId;
+    private String workoutId;
+    private String userId;
     private String name;
-    private List<WorkoutType> categories;
+    private WorkoutType workoutType;
     private Date completionTime;
     private String status;
 }

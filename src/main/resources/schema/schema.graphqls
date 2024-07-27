@@ -1,0 +1,286 @@
+type Query {
+    getDrillById(drillId: String!): Drill
+    getAllDrillsByWorkoutId(workoutId: String!): [Drill]
+    getAllDrillsByUserId(userId: String!): [Drill]
+
+    getWorkoutById(workoutId: String!): Workout
+    getAllWorkoutByUserId(userId: String!): [Workout]
+
+    getWorkoutSelectionById(workoutSelectionId: String!): WorkoutSelection
+    getAllWorkoutSelection: [WorkoutSelection]
+
+    getUserPerformanceById(userPerformanceId: ID!): UserPerformance
+    getUserPerformanceByUserId(userId: String!): UserPerformance
+    getAllUserPerformance: [UserPerformance]
+
+    getUserById(userId: String!): User
+    getUserByUsername(username: String!): User
+    getUserByEmail(email: String!): User
+    getAllUser: [User]
+}
+
+type Mutation {
+    createDrill(drillInput: DrillInput!): Drill
+    updateDrill(drillInput: DrillInput!): Drill
+    deleteDrill(drillId: String!): Boolean
+
+    createWorkout(WorkoutInput: WorkoutInput!): Workout
+    createWorkoutByWorkoutSelection(workoutSelectionInput: [WorkoutBySelectionInput]!): [Workout]
+
+    createWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    createDrillForWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    updateWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
+    deleteWorkoutSelection(workoutSelectionId: String!): Boolean
+
+    createWorkoutSelectionExample(workoutSelectionInput: WorkoutSelectionInput): WorkoutSelection
+
+    createUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
+    updateUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
+    deleteUserPerformance(userPerformanceId: ID!): Boolean
+
+    createUser(userInput: UserInput!): User
+    updateUser(userInput: UserInput!): User
+    deleteUser(userId: String!): Boolean
+}
+
+input DrillInput {
+    userId: String!
+    workoutId: String!
+    drillType: DrillType!
+    isSingle: Boolean!
+    status: DrillStatus!
+}
+
+input ShotsTakenInput {
+    threePointLeftCorner: Int!
+    threePointRightCorner: Int!
+    threePointLeftWing: Int!
+    threePointRightWing: Int!
+    threePointMiddle: Int!
+    twoPointLeftCorner: Int!
+    twoPointRightCorner: Int!
+    twoPointLeftWing: Int!
+    twoPointRightWing: Int!
+    twoPointMiddle: Int!
+}
+
+input ShotsTakenThresholdsInput {
+    threePointLeftCorner: [Int]!
+    threePointRightCorner: [Int]!
+    threePointLeftWing: [Int]!
+    threePointRightWing: [Int]!
+    threePointMiddle: [Int]!
+    twoPointLeftCorner: [Int]!
+    twoPointRightCorner: [Int]!
+    twoPointLeftWing: [Int]!
+    twoPointRightWing: [Int]!
+    twoPointMiddle: [Int]!
+}
+
+enum DrillType {
+    TWO_BALL_DRILLS
+    CONE_DRILLS
+    CROSSOVERS
+    CHANGE_OF_SPEED
+    CHANGE_OF_DIRECTION
+    CATCH_AND_SHOT
+    FIVE_STAR_DRILL
+    DRIBBLE_PULL_UPS
+    LEFT_HAND_LAYUPS
+    RIGHT_HAND_LAYUPS
+    CONTACT_FINISHES
+    FLOATERS
+    PICK_N_ROLL
+    DOWN_HILL_DRIVES
+    SHOTS_OFF_OF_SCREENS
+    SPRINTS
+    HILL_RUNS
+    SAND_PIT
+    UPPER_BODY
+    LOWER_BODY
+    JUMPING
+    EXPLOSIVENESS
+    LADDER_DRILLS
+    WALKING_STRETCHES
+    STATIC_STRETCHES
+}
+
+enum DrillStatus {
+    CREATED,
+    IN_PROGRESS,
+    COMPLETED,
+    FAILED
+}
+
+type Drill {
+    drillId: String!
+    workoutId: String!
+    userId: String!
+    drillType: DrillType!
+    isSingle: Boolean!
+    shotsTaken: ShotsTaken
+    shotsMade: ShotsTaken
+    shotsRequired: ShotsTaken
+    status: DrillStatus!
+}
+
+type ShotsTaken {
+    threePointLeftCorner: Int!
+    threePointRightCorner: Int!
+    threePointLeftWing: Int!
+    threePointRightWing: Int!
+    threePointMiddle: Int!
+    twoPointLeftCorner: Int!
+    twoPointRightCorner: Int!
+    twoPointLeftWing: Int!
+    twoPointRightWing: Int!
+    twoPointMiddle: Int!
+}
+
+type ShotsTakenThresholds {
+    threePointLeftCorner: [Int]!
+    threePointRightCorner: [Int]!
+    threePointLeftWing: [Int]!
+    threePointRightWing: [Int]!
+    threePointMiddle: [Int]!
+    twoPointLeftCorner: [Int]!
+    twoPointRightCorner: [Int]!
+    twoPointLeftWing: [Int]!
+    twoPointRightWing: [Int]!
+    twoPointMiddle: [Int]!
+}
+
+
+
+
+input UserPerformanceInput {
+    totalOfWorkoutCompleted: Int
+    totalOfDrillsCompleted: Int
+}
+
+type UserPerformance {
+    userPerformanceId: String!
+    userId: String!
+    totalOfWorkoutCompleted: Int!
+    totalOfDrillsCompleted: Int!
+}
+
+type User {
+    userId: String!
+    firstName: String!
+    lastName: String!
+    dateOfBirth: String!
+    email: String!
+    phoneNumber: Int!
+    username: String!
+}
+
+input UserInput {
+    username: String!
+    email: String!
+    firstName: String
+    lastName: String
+    # Add any other fields relevant to creating/updating a User
+}
+
+type Mutation {
+
+
+}
+
+input WorkoutInput {
+    userId: String!
+    name: String!
+    categories: [WorkoutType!]!
+    completionTime: String!
+    status: String!
+}
+
+input WorkoutBySelectionInput {
+    workoutSelectionList: [WorkoutSelectionInput]!
+    userId: String!
+}
+
+input WorkoutSelectionInput {
+    workoutId: ID
+    workoutType: WorkoutType
+    drills: [DrillModelInput]
+}
+
+input DrillModelInput {
+    drillType: DrillType
+    isEnabled: Boolean
+}
+
+enum WorkoutType {
+    DRIBBLING
+    THREE_PT_SHOTS
+    MID_RANGE_SHOTS
+    FINISHING
+    GAME_TIME_SCENARIOS
+    CONDITIONING
+    PLYOMETRICS
+    FOOTWORK
+    DEFENSE
+    WARM_UP
+    RECOVERY_AND_COOL_DOWN
+}
+
+enum DrillType {
+    TWO_BALL_DRILLS
+    CONE_DRILLS
+    CROSSOVERS
+    CHANGE_OF_SPEED
+    CHANGE_OF_DIRECTION
+    CATCH_AND_SHOT
+    FIVE_STAR_DRILL
+    DRIBBLE_PULL_UPS
+    LEFT_HAND_LAYUPS
+    RIGHT_HAND_LAYUPS
+    CONTACT_FINISHES
+    FLOATERS
+    PICK_N_ROLL
+    DOWN_HILL_DRIVES
+    SHOTS_OFF_OF_SCREENS
+    SPRINTS
+    HILL_RUNS
+    SAND_PIT
+    UPPER_BODY
+    LOWER_BODY
+    JUMPING
+    EXPLOSIVENESS
+    LADDER_DRILLS
+    DEFENSIVE_SLIDES
+    WALKING_STRETCHES
+    STATIC_STRETCHES
+}
+
+type Workout {
+    workoutId: String!
+    userId: String!
+    name: String!
+    categories: [String!]!
+    completionTime: String!
+    status: String!
+}
+
+type DrillModel {
+    drillId: ID!
+    drillType: DrillType
+    isEnabled: Boolean
+}
+
+type WorkoutSelection {
+    workoutId: ID!
+    workoutType: WorkoutType
+    drills: [DrillModel]
+    lastUpdatedDate: String
+    creationDate: String
+    lastUpdatedBy: String
+    createdBy: String
+}
+
+type WorkoutBySelection {
+    workoutSelectionList: [WorkoutSelection]!
+    userId: String!
+}

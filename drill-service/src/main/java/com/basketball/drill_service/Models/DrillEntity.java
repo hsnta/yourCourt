@@ -31,7 +31,13 @@ public class DrillEntity extends DatabaseDefaultFields {
     DrillType drillType;
 
     @Embedded
-    ShotsTaken shotsTaken;
+    ShotsTaken shotsToBeTaken;
+    @Embedded
+    ShotsTaken shotsMade;
+    @Embedded
+    ShotsTaken shotsRequired;
+
+    String timer;
 
     @Enumerated(EnumType.STRING)
     DrillStatus status;
