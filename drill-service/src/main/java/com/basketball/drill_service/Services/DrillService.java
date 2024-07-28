@@ -2,7 +2,6 @@ package com.basketball.drill_service.Services;
 
 import com.basketball.codegen_service.codegen.types.Drill;
 import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
-import com.basketball.codegen_service.codegen.types.DrillModel;
 import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import com.basketball.drill_service.Utils.DrillMapper;
 import com.basketball.drill_service.Utils.DrillUtils;
@@ -102,11 +101,6 @@ public class DrillService {
                 .setIsActive(false);
         return true;
     }
-
-//    public void dskmsdk() {
-//        Map<String, List<Integer>>
-//    }
-
 
     private static void updateBaseDefaultFields(DrillEntity drillEntity) {
         drillEntity.setLastUpdatedBy(DrillUtils.getUserName());
