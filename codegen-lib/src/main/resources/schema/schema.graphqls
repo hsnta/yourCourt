@@ -4,10 +4,9 @@ type Query {
     getAllDrillsByUserId(userId: String!): [Drill]
 
     getWorkoutById(workoutId: String!): Workout
-    getAllWorkoutByUserId(userId: String!): [Workout]
+    getAllWorkoutsByUserId(userId: String!): [Workout]
 
-    getWorkoutSelectionById(workoutSelectionId: String!): WorkoutSelection
-    getAllWorkoutSelection: [WorkoutSelection]
+    getAllCustomWorkoutDrills: [DrillType]
 
     getUserPerformanceById(userPerformanceId: ID!): UserPerformance
     getUserPerformanceByUserId(userId: String!): UserPerformance
@@ -24,15 +23,11 @@ type Mutation {
     updateDrill(drillInput: DrillInput!): Drill
     deleteDrill(drillId: String!): Boolean
 
-    createWorkout(WorkoutInput: WorkoutInput!): Workout
-    createWorkoutByWorkoutSelection(workoutBySelectionInput: WorkoutBySelectionInput!): [Workout]
+    createWorkoutFromRecommendation(recommendation: WorkoutInput!): Workout
 
-    createWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
-    createDrillForWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
-    updateWorkoutSelection(workoutSelectionInput: WorkoutSelectionInput!): WorkoutSelection
-    deleteWorkoutSelection(workoutSelectionId: String!): Boolean
+    createCustomWorkoutDrill(drillType: DrillType): CustomWorkoutDrill
 
-    createWorkoutSelectionExample(workoutSelectionInput: WorkoutSelectionInput): WorkoutSelection
+    createWorkoutByCustomWorkoutDrills(customWorkoutDrills: CustomWorkoutDrillsRequest!): Workout
 
     createUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
     updateUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
@@ -49,6 +44,16 @@ input DrillInput {
     drillType: DrillType!
     isSingle: Boolean!
     status: DrillStatus!
+}
+
+input CustomWorkoutDrillInput {
+    drillType: DrillType!
+}
+
+input CustomWorkoutDrillsRequest {
+    userId: String!
+    workoutName: String!
+    drillTypes: [DrillType]!
 }
 
 input ShotsTakenInput {
@@ -101,6 +106,7 @@ enum DrillType {
     JUMPING
     EXPLOSIVENESS
     LADDER_DRILLS
+    DEFENSIVE_SLIDES
     WALKING_STRETCHES
     STATIC_STRETCHES
 }
@@ -122,6 +128,11 @@ type Drill {
     shotsMade: ShotsTaken
     shotsRequired: ShotsTaken
     status: DrillStatus!
+}
+
+type CustomWorkoutDrill {
+    customDrillId: String!
+    drillType: DrillType!
 }
 
 type ShotsTaken {
@@ -150,8 +161,12 @@ type ShotsTakenThresholds {
     twoPointMiddle: [Int]!
 }
 
-
-
+type CustomDrillIdentification {
+    drillType: DrillType!
+    isSingle: Boolean!
+    shotsToBeTaken: ShotsTaken!
+    timer: String!
+}
 
 input UserPerformanceInput {
     totalOfWorkoutCompleted: Int
@@ -219,13 +234,14 @@ enum WorkoutType {
     DEFENSE
     WARM_UP
     RECOVERY_AND_COOL_DOWN
+    CUSTOM_WORKOUT
 }
 
 type Workout {
     workoutId: String!
     userId: String!
     name: String!
-    categories: [String!]!
+    workoutType: WorkoutType!
     completionTime: String!
     status: String!
 }
@@ -254,5 +270,5 @@ type WorkoutBySelection {
 type DrillCreationRequest {
     workoutId: ID!
     userId: ID!
-    drills: [DrillModel]
+    drillTypes: [DrillType]
 }

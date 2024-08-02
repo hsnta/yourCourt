@@ -1,11 +1,10 @@
 package com.basketball.workout_service.Controllers;
 
+import com.basketball.codegen_service.codegen.types.CustomWorkoutDrillsRequest;
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Models.WorkoutEntity;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
-import com.basketball.workout_service.Services.WorkoutSelectionService;
 import com.basketball.workout_service.Services.WorkoutService;
-import com.basketball.codegen_service.codegen.types.WorkoutBySelection;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -24,45 +23,46 @@ public class DgsWorkoutController {
     @Autowired
     KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
-    @DgsMutation
-    public List<WorkoutEntity> createWorkoutByWorkoutSelection(@InputArgument("workoutBySelectionInput")
-                                                                   WorkoutBySelection workoutSelectionInput) {
+
+    @DgsQuery
+    public WorkoutEntity getWorkoutById(@InputArgument("workoutId") String workoutId) {
         try {
-            return workoutService.createWorkoutByWorkoutSelection(workoutSelectionInput);
+            return workoutService.getWorkoutById(workoutId);
         } catch (WorkoutNotFoundException e) {
-            kafkaProducerWorkoutService.sendMessage("message: " + workoutSelectionInput);
+            kafkaProducerWorkoutService.sendMessageToUI("message: " + workoutId);
         }
         return null;
     }
 
-//    @DgsMutation
-//    public WorkoutSelection createDrillForWorkoutSelection(@InputArgument("workoutSelectionInput") WorkoutSelection workoutSelection) {
-//        try {
-//            return workoutSelectionService.createDrillForWorkoutSelection(workoutSelection);
-//        } catch (WorkoutNotFoundException e) {
-//            kafkaProducerWorkoutService.sendMessage("Workout not found for id: " + workoutSelection.getWorkoutId());
-//        }
-//        return null;
-//    }
-//
-//    @DgsMutation
-//    public WorkoutSelection updateWorkoutSelection(@InputArgument("workoutSelectionInput") WorkoutSelection workoutSelection) {
-//        try {
-//            return workoutSelectionService.updateWorkoutSelection(workoutSelection);
-//        } catch (WorkoutNotFoundException e) {
-//            kafkaProducerWorkoutService.sendMessage("Workout not found for id: " + workoutSelection.getWorkoutId());
-//        }
-//        return null;
-//    }
-//
-//    @DgsMutation
-//    public Boolean deleteWorkoutSelection(@InputArgument("workoutSelectionId") String workoutSelectionId) {
-//        try {
-//            return workoutSelectionService.deleteWorkoutSelection(workoutSelectionId);
-//        } catch (WorkoutNotFoundException e) {
-//            kafkaProducerWorkoutService.sendMessage("Workout not found for id: " + workoutSelectionId);
-//        }
-//        return null;
-//    }
+    @DgsQuery
+    public List<WorkoutEntity> getAllWorkoutsByUserId(@InputArgument("userId") String userId) {
+        try {
+            return workoutService.getAllWorkoutsByUserId(userId);
+        } catch (WorkoutNotFoundException e) {
+            kafkaProducerWorkoutService.sendMessageToUI("message: " + userId);
+        }
+        return null;
+    }
 
+    @DgsMutation
+    public WorkoutEntity createWorkoutByCustomWorkoutDrills(@InputArgument("customWorkoutDrills")
+                                                                  CustomWorkoutDrillsRequest customWorkoutDrills) {
+        try {
+            return workoutService.createWorkoutByCustomWorkoutDrills(customWorkoutDrills);
+        } catch (WorkoutNotFoundException e) {
+            kafkaProducerWorkoutService.sendMessageToUI("message: " + customWorkoutDrills);
+        }
+        return null;
+    }
+
+    @DgsMutation
+    public WorkoutEntity createWorkoutFromRecommendation(@InputArgument("recommendation")
+                                                            CustomWorkoutDrillsRequest customWorkoutDrills) {
+        try {
+            return workoutService.createWorkoutByCustomWorkoutDrills(customWorkoutDrills);
+        } catch (WorkoutNotFoundException e) {
+            kafkaProducerWorkoutService.sendMessageToUI("message: " + customWorkoutDrills);
+        }
+        return null;
+    }
 }

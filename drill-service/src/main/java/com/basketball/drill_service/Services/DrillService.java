@@ -2,6 +2,7 @@ package com.basketball.drill_service.Services;
 
 import com.basketball.codegen_service.codegen.types.Drill;
 import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
+import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import com.basketball.drill_service.Utils.DrillMapper;
 import com.basketball.drill_service.Utils.DrillUtils;
@@ -55,17 +56,16 @@ public class DrillService {
         return drillMapper.toDto(drillRepository.save(drillEntity));
     }
 
-    public List<Drill> createDrillFromWorkoutSelection(DrillCreationRequest drillCreationRequest) {
+    public List<Drill> createDrillFromDrillCreationRequest(DrillCreationRequest drillCreationRequest) {
         List<DrillEntity> drillEntityList = new ArrayList<>();
-
-        drillCreationRequest.getDrills().forEach(drillModel -> {
+        drillCreationRequest.getDrillTypes().forEach(drillType -> {
             drillEntityList.add(DrillEntity.builder()
                     .userId(drillCreationRequest.getUserId())
                     .workoutId(drillCreationRequest.getWorkoutId())
-                    .drillType(drillModel.getDrillType())
+                    .drillType(drillType)
                     .drillId(DrillUtils.createUniqueDrillId())
                     .isActive(true)
-                    .createdBy(DrillUtils.getUserName())
+                    .createdBy(drillCreationRequest.getUserId())
                     .creationDate(DrillUtils.getCurrentSqlTime())
                     .shotsRequired(new ShotsTaken())
                     .shotsToBeTaken(new ShotsTaken())
@@ -100,6 +100,16 @@ public class DrillService {
                         new DrillNotFoundException("Drill not found for ID: " + id))
                 .setIsActive(false);
         return true;
+    }
+
+    public void processDrillCreationRequest(DrillCreationRequest drillCreationRequest) {
+        // Implement your business logic to handle the drill creation request
+        System.out.println("Processing Drill Creation Request for Workout ID: " + drillCreationRequest.getWorkoutId());
+        // Process each drill type in the request
+        for (DrillType drillType : drillCreationRequest.getDrillTypes()) {
+            System.out.println("Processing Drill Type: " + drillType);
+        }
+        // You can add your own logic here to handle the request
     }
 
     private static void updateBaseDefaultFields(DrillEntity drillEntity) {

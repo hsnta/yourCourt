@@ -1,13 +1,8 @@
 package com.basketball.workout_service.Controllers;
 
-import com.basketball.workout_service.Models.WorkoutSelectionEntity;
 import com.basketball.workout_service.Services.WorkoutService;
-import com.basketball.codegen_service.codegen.types.WorkoutSelection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/workout")

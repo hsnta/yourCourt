@@ -18,9 +18,11 @@ public class DrillCreationRequestSerializer implements Serializer<DrillCreationR
     @Override
     public byte[] serialize(String topic, DrillCreationRequest data) {
         try {
-            if (data == null) {
+            if (data == null){
+                System.out.println("Null received at serializing");
                 return null;
             }
+            System.out.println("Serializing...");
             return objectMapper.writeValueAsBytes(data);
         } catch (Exception e) {
             throw new SerializationException("Error serializing value", e);
