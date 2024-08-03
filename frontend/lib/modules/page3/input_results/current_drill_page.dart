@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/modules/page3/input_results/court_constants.dart';
 
 import 'court_view.dart';
 
@@ -10,11 +11,16 @@ class CurrentDrillPage extends StatefulWidget {
 }
 
 class _CurrentDrillPageState extends State<CurrentDrillPage> {
+  Set<String> disabledPartsSet = {
+    "Left Corner 2 points",
+    "Left Corner 3 points",
+    "Left Wing 2 points",
+  };
   Future<void> _dialogBuilder(BuildContext context) {
     return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
-          return const CourtView();
+          return CourtView(getMockList());
         });
   }
 
