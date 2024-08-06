@@ -32,33 +32,15 @@ class _CourtPartButtonState extends State<CourtPartButton>
     with SingleTickerProviderStateMixin {
   bool _inputMode = false;
   int score = 0;
-  final GlobalKey _childKey = GlobalKey();
-  double _childWidth = 0;
-  double _childHeight = 0;
   late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance
-    //     .addPostFrameCallback((_) => _measureScoreCounterSize());
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
-  }
-
-  void _measureScoreCounterSize() {
-    final RenderBox? renderBox =
-        _childKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      setState(() {
-        _childWidth = renderBox.size.width -
-            (_inputMode ? 0 : 23); // moved to gorizontal offset
-        _childHeight = renderBox.size.height +
-            (_inputMode ? 0 : 55); // moved to vertical offset
-      });
-    }
   }
 
   @override
@@ -77,15 +59,12 @@ class _CourtPartButtonState extends State<CourtPartButton>
   }
 
   void _handleTapDown(TapDownDetails details, BuildContext context) {
-    print("zone tap");
     setState(() {
       _inputMode = true;
     });
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final position = renderBox.localToGlobal(Offset.zero);
     widget.blockOtherPartsCallback(widget.partName);
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _measureScoreCounterSize());
     _dialogBuilder(context, position);
     _animationController.forward();
   }
@@ -96,12 +75,7 @@ class _CourtPartButtonState extends State<CourtPartButton>
         context: context,
         builder: (BuildContext context) {
           return LayoutBuilder(builder: (context, constraints) {
-            print(constraints.biggest.height);
             return Stack(children: [
-              // Positioned(
-              //     top: globalPosition.dy,
-              //     left: globalPosition.dx,
-              //     child: Container(height: 10, width: 10, color: Colors.red)),
               Positioned(
                   top: globalPosition.dy + bounds.top,
                   left: bounds.left,
@@ -119,27 +93,10 @@ class _CourtPartButtonState extends State<CourtPartButton>
                             child: Transform.translate(
                                 offset: const Offset(4, -26),
                                 child: ShotsInput(
-                                    key: _childKey,
                                     score: score,
                                     maxShots: widget.shotsNeeded,
                                     setScoreOnCourt: setScore))),
                       ))),
-              // Positioned(
-              //     left: globalPosition.dx +
-              //         bounds.left +
-              //         (bounds.width / 2) -
-              //         (_childWidth / 2),
-              //     top: globalPosition.dy +
-              //         bounds.top +
-              //         (bounds.height / 2) -
-              //         (_childHeight / 2),
-              //     child: Transform.translate(
-              //         offset: Offset(-58, -48),
-              //         child: ShotsInput(
-              //             key: _childKey,
-              //             score: score,
-              //             maxShots: widget.shotsNeeded,
-              //             setScoreOnCourt: setScore)))
             ]);
           });
         });
