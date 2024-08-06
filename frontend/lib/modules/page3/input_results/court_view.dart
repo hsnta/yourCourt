@@ -51,7 +51,7 @@ class _CourtViewState extends State<CourtView>
     courtPartsWidgets.add(Opacity(
         opacity: 0.8,
         child: SvgPicture.asset(
-          "assets/basketball_no_vectors.svg",
+          "assets/images/basketball_no_vectors.svg",
           fit: BoxFit.fill,
         )));
     widget.courtPartModels

@@ -67,7 +67,7 @@ flutter:
   assets:
     - assets/basketball.jpg
     - assets/basketball_no_vectors.jpg
-    - assets/basketball_no_vectors.svg
+    - assets/images/basketball_no_vectors.svg
     - assets/images/dashboard_background.png
 
 
