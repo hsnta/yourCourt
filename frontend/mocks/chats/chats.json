@@ -1,0 +1,52 @@
+{
+  "chats": [
+    {
+      "user_id": 1,
+      "message": "Announcements, Athletes, Parents"
+    },
+    {
+      "user_id": 2,
+      "message": "6 is better than 4"
+    },
+    {
+      "user_id": 3,
+      "message": "Mamba Forever"
+    },
+    {
+      "user_id": 4,
+      "message": "Yessir lets get a workout in today..."
+    },
+    {
+      "user_id": 5,
+      "message": "Feedback is a gift, GBE!"
+    },
+    {
+      "user_id": 6,
+      "message": "1% Better everyday!..."
+    },
+    {
+      "user_id": 1,
+      "message": "Announcements, Athletes, Parents"
+    },
+    {
+      "user_id": 2,
+      "message": "6 is better than 4"
+    },
+    {
+      "user_id": 3,
+      "message": "Mamba Forever"
+    },
+    {
+      "user_id": 4,
+      "message": "Yessir lets get a workout in today..."
+    },
+    {
+      "user_id": 5,
+      "message": "Feedback is a gift, GBE!"
+    },
+    {
+      "user_id": 6,
+      "message": "1% Better everyday!..."
+    }
+  ]
+}
