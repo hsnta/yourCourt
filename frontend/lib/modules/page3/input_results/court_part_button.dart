@@ -95,24 +95,53 @@ class _CourtPartButtonState extends State<CourtPartButton>
     return showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
-          return Stack(children: [
-            Positioned(
-                left: globalPosition.dx +
-                    bounds.left +
-                    (bounds.width / 2) -
-                    (_childWidth / 2),
-                top: globalPosition.dy +
-                    bounds.top +
-                    (bounds.height / 2) -
-                    (_childHeight / 2),
-                child: Transform.translate(
-                    offset: Offset(-58, -48),
-                    child: ShotsInput(
-                        key: _childKey,
-                        score: score,
-                        maxShots: widget.shotsNeeded,
-                        setScoreOnCourt: setScore)))
-          ]);
+          return LayoutBuilder(builder: (context, constraints) {
+            print(constraints.biggest.height);
+            return Stack(children: [
+              // Positioned(
+              //     top: globalPosition.dy,
+              //     left: globalPosition.dx,
+              //     child: Container(height: 10, width: 10, color: Colors.red)),
+              Positioned(
+                  top: globalPosition.dy + bounds.top,
+                  left: bounds.left,
+                  child: Container(
+                      height: bounds.height,
+                      width: bounds.width,
+                      color: Colors.transparent,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: OverflowBox(
+                            minWidth: 0.0,
+                            minHeight: 0.0,
+                            maxWidth: double.infinity,
+                            maxHeight: double.infinity,
+                            child: Transform.translate(
+                                offset: const Offset(4, -26),
+                                child: ShotsInput(
+                                    key: _childKey,
+                                    score: score,
+                                    maxShots: widget.shotsNeeded,
+                                    setScoreOnCourt: setScore))),
+                      ))),
+              // Positioned(
+              //     left: globalPosition.dx +
+              //         bounds.left +
+              //         (bounds.width / 2) -
+              //         (_childWidth / 2),
+              //     top: globalPosition.dy +
+              //         bounds.top +
+              //         (bounds.height / 2) -
+              //         (_childHeight / 2),
+              //     child: Transform.translate(
+              //         offset: Offset(-58, -48),
+              //         child: ShotsInput(
+              //             key: _childKey,
+              //             score: score,
+              //             maxShots: widget.shotsNeeded,
+              //             setScoreOnCourt: setScore)))
+            ]);
+          });
         });
   }
 
@@ -133,8 +162,9 @@ class _CourtPartButtonState extends State<CourtPartButton>
           clipper: CourtPartsClipper(widget.partName),
           child: Stack(children: [
             Positioned.fill(
-                child:
-                    Opacity(opacity: 0.4, child: Container(color: Colors.red))),
+                child: Opacity(
+                    opacity: 0.4,
+                    child: Container(color: Colors.black26.withOpacity(0.8)))),
             Positioned.fill(
                 child: CustomPaint(
               painter: BorderPainter(widget.partName),
