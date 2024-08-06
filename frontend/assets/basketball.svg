@@ -4,13 +4,12 @@
    id="Layer_1"
    x="0px"
    y="0px"
-   width="660"
-   viewBox="0 0 660 542"
+   width="100%"
+   viewBox="0 0 680 1024"
    enable-background="new 0 0 680 1024"
    xml:space="preserve"
    sodipodi:docname="basketball.svg"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
-   height="542"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -30,14 +29,14 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:zoom="0.91321923"
-   inkscape:cx="206.41265"
-   inkscape:cy="421.58552"
+   inkscape:cx="309.34522"
+   inkscape:cy="314.27284"
    inkscape:window-width="1920"
    inkscape:window-height="1016"
    inkscape:window-x="0"
    inkscape:window-y="0"
    inkscape:window-maximized="1"
-   inkscape:current-layer="layer3"
+   inkscape:current-layer="layer4"
    showgrid="false" />
 
 
@@ -2482,7 +2481,9 @@
    inkscape:groupmode="layer"
    id="layer3"
    inkscape:label="source"
-   transform="translate(11.99959,51)"><path
+   transform="translate(11.99959,51)"
+   sodipodi:insensitive="true"
+   style="display:none"><path
      fill="#da7e2f"
      opacity="1"
      stroke="none"
@@ -8731,7 +8732,7 @@
      fill="#f59f4a"
      opacity="1"
      stroke="none"
-     d="m 298.92377,227.31986 c -0.3859,0.23489 -1.04242,0.39517 -1.8133,0.32272 0.43799,-0.28757 0.99036,-0.34244 1.8133,-0.32272 z"
+     d="m 421.32515,370.11613 c -0.3859,0.23489 -1.04242,0.39517 -1.8133,0.32272 0.43799,-0.28757 0.99036,-0.34244 1.8133,-0.32272 z"
      id="path1250" /><path
      fill="#ec9745"
      opacity="1"
