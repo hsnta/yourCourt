@@ -1,0 +1,16 @@
+FROM openjdk:17  as build
+WORKDIR /workout-service
+
+# COPY --from=codegen-lib-build /root/.m2 /root/.m2
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+
+FROM openjdk:17
+
+WORKDIR /workout-service
+COPY --from=build /workout-service/target/workout-service-0.0.1-SNAPSHOT.jar .
+ENTRYPOINT ["java", "-jar", "workout-service-0.0.1-SNAPSHOT.jar"]

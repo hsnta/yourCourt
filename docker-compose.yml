@@ -9,9 +9,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "example"
-      MONGO_INITDB_DATABASE: "BDA_DEV"
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE_NAME}
 
   mongo-express:
     image: mongo-express
@@ -45,17 +45,106 @@ services:
       PGADMIN_DEFAULT_EMAIL: "user-name@domain-name.com"
       PGADMIN_DEFAULT_PASSWORD: "example"
 
-  basketball-service:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_INTERNAL_PORT}
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:${ZOOKEEPER_INTERNAL_PORT}"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_URL}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_URL},PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: ${KAFKA_URL}
+      KAFKA_CLUSTERS_0_ZOOKEEPER: ${ZOOKEEPER_URL}
+
+  registry-service:
     build:
-      context: .
-    container_name: "app"
+      context: ./service-registry
+    container_name: "registry-service"
     depends_on:
       - mongo
       - postgre-db
+      - kafka
     ports:
-      - "8080:8080"
+      - "${EUREKA_SERVICE_PORT}:${EUREKA_SERVICE_PORT}"
+
+  drill-service:
+    build:
+      context: ./drill-service
+    container_name: "drill-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${DRILL_SERVICE_PORT}:${DRILL_SERVICE_PORT}"
+    env_file:
+      - .env
+
+  user-performance-service:
+    build:
+      context: ./user-performance
+    container_name: "user-performance-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${USER_PERFORMANCE_SERVICE_PORT}:${USER_PERFORMANCE_SERVICE_PORT}"
+    env_file:
+      - .env
+#
+#  user-service:
+#    build:
+#      context: ./user-service
+#    container_name: "user-service"
+#    depends_on:
+#      - codegen-lib
+#      - mongo
+#      - postgre-db
+#      - registry-service
+#    ports:
+#      - "8762:8762"
+#    volumes:
+#      - maven-repo:/root/.m2
+#
+#  workout-service:
+#    build:
+#      context: ./workout-service
+#    container_name: "workout-service"
+#    depends_on:
+#      - codegen-lib
+#      - mongo
+#      - postgre-db
+#      - registry-service
+#    ports:
+#      - "8765:8765"
+#    volumes:
+#      - maven-repo:/root/.m2
 
 volumes:
   mongodb-data-vol:
   pgdata-vol:
   pgadmin-data-vol:
+
