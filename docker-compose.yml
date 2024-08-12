@@ -52,6 +52,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:${ZOOKEEPER_INTERNAL_PORT}"
+    tty: true
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -59,6 +60,7 @@ services:
       - zookeeper
     ports:
       - "9092:29092"
+    tty: true
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_URL}
@@ -88,6 +90,7 @@ services:
       - kafka
     ports:
       - "${EUREKA_SERVICE_PORT}:${EUREKA_SERVICE_PORT}"
+    tty: true
 
   drill-service:
     build:
@@ -101,6 +104,7 @@ services:
       - "${DRILL_SERVICE_PORT}:${DRILL_SERVICE_PORT}"
     env_file:
       - .env
+    tty: true
 
   user-performance-service:
     build:
@@ -114,34 +118,35 @@ services:
       - "${USER_PERFORMANCE_SERVICE_PORT}:${USER_PERFORMANCE_SERVICE_PORT}"
     env_file:
       - .env
-#
-#  user-service:
-#    build:
-#      context: ./user-service
-#    container_name: "user-service"
-#    depends_on:
-#      - codegen-lib
-#      - mongo
-#      - postgre-db
-#      - registry-service
-#    ports:
-#      - "8762:8762"
-#    volumes:
-#      - maven-repo:/root/.m2
-#
-#  workout-service:
-#    build:
-#      context: ./workout-service
-#    container_name: "workout-service"
-#    depends_on:
-#      - codegen-lib
-#      - mongo
-#      - postgre-db
-#      - registry-service
-#    ports:
-#      - "8765:8765"
-#    volumes:
-#      - maven-repo:/root/.m2
+    tty: true
+
+  user-service:
+    build:
+      context: ./user-service
+    container_name: "user-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+    env_file:
+      - .env
+    tty: true
+
+  workout-service:
+    build:
+      context: ./workout-service
+    container_name: "workout-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${WORKOUT_SERVICE_PORT}:${WORKOUT_SERVICE_PORT}"
+    env_file:
+      - .env
+    tty: true
 
 volumes:
   mongodb-data-vol:
