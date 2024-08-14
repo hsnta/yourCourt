@@ -12,6 +12,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE_NAME}
+    env_file:
+      - "docker_local.env"
 
   mongo-express:
     image: mongo-express
@@ -23,6 +25,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: "example"
       ME_CONFIG_MONGODB_URL: "mongodb://root:example@mongo:27017/"
       ME_CONFIG_BASICAUTH: false
+    env_file:
+      - "docker_local.env"
 
   postgre-db:
     image: postgres
@@ -33,6 +37,8 @@ services:
       POSTGRES_PASSWORD: "example"
     volumes:
       - pgdata-vol:/var/lib/postgresql/data
+    env_file:
+      - "docker_local.env"
 
   pgadmin:
     image: dpage/pgadmin4
@@ -44,6 +50,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "user-name@domain-name.com"
       PGADMIN_DEFAULT_PASSWORD: "example"
+    env_file:
+      - "docker_local.env"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -53,6 +61,8 @@ services:
     ports:
       - "22181:${ZOOKEEPER_INTERNAL_PORT}"
     tty: true
+    env_file:
+      - "docker_local.env"
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -61,6 +71,8 @@ services:
     ports:
       - "9092:29092"
     tty: true
+    env_file:
+      - "docker_local.env"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_URL}
@@ -79,6 +91,8 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: ${KAFKA_URL}
       KAFKA_CLUSTERS_0_ZOOKEEPER: ${ZOOKEEPER_URL}
+    env_file:
+      - "docker_local.env"
 
   registry-service:
     build:
@@ -91,6 +105,8 @@ services:
     ports:
       - "${EUREKA_SERVICE_PORT}:${EUREKA_SERVICE_PORT}"
     tty: true
+    env_file:
+      - "docker_local.env"
 
   drill-service:
     build:
@@ -103,7 +119,7 @@ services:
     ports:
       - "${DRILL_SERVICE_PORT}:${DRILL_SERVICE_PORT}"
     env_file:
-      - .env
+      - "docker_local.env"
     tty: true
 
   user-performance-service:
@@ -117,7 +133,7 @@ services:
     ports:
       - "${USER_PERFORMANCE_SERVICE_PORT}:${USER_PERFORMANCE_SERVICE_PORT}"
     env_file:
-      - .env
+      - "docker_local.env"
     tty: true
 
   user-service:
@@ -131,7 +147,7 @@ services:
     ports:
       - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
     env_file:
-      - .env
+      - "docker_local.env"
     tty: true
 
   workout-service:
@@ -145,7 +161,7 @@ services:
     ports:
       - "${WORKOUT_SERVICE_PORT}:${WORKOUT_SERVICE_PORT}"
     env_file:
-      - .env
+      - "docker_local.env"
     tty: true
 
 volumes:
