@@ -26,6 +26,8 @@ docker compose --env-file=docker_local.env up -d
 * Postgres admin: <localhost:8888>
 * Eureka page: <localhost:8761>
 
+All the logins/passwords to the DBs are hardcoded in docker-compose
+
 
   For logs, you can use the docker desktop app or the below command
 ```bash
@@ -41,7 +43,7 @@ You can stop all your services just by killing current terminal's process (Ctrl 
 docker compose down -v  
 ```
 
-
+Note:
 All the properties are inside 'docker_local.env' file. If you want to run services with different properties (like for local run or prod environment run without using docker), configure your own ***.env file and use it in the run configuration
 
 
