@@ -38,9 +38,14 @@ All the logins/passwords to the DBs are hardcoded in docker-compose
 ## 4. Stop
 You can stop all your services just by killing current terminal's process (Ctrl + C)
 
-## 5. Remove containers and volumes if not used
+## 5. Remove containers if not used
   ```bash
-docker compose down -v  
+docker compose --env-file=docker_local.env down
+```
+
+This one will remove the database files as well
+  ```bash
+docker compose --env-file=docker_local.env down -v
 ```
 
 Note:
