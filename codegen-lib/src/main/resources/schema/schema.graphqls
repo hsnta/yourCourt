@@ -188,6 +188,13 @@ type User {
     email: String!
     phoneNumber: Int!
     username: String!
+    password: String!
+    role: Role!
+}
+
+input LoginInput {
+    username: String!
+    password: String!
 }
 
 input UserInput {
@@ -195,6 +202,7 @@ input UserInput {
     email: String!
     firstName: String
     lastName: String
+    password: String!
     # Add any other fields relevant to creating/updating a User
 }
 
@@ -221,6 +229,8 @@ input DrillModelInput {
     drillType: DrillType
     isEnabled: Boolean
 }
+
+enum Role { USER, ADMIN}
 
 enum WorkoutType {
     DRIBBLING

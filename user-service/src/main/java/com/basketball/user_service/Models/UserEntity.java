@@ -23,4 +23,5 @@ public class UserEntity extends DatabaseDefaultFields{
     private String email;
     private Integer phoneNumber;
     private String username;
+    private String password;
 }
