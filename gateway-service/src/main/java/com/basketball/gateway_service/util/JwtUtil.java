@@ -1,7 +1,6 @@
 package com.basketball.gateway_service.util;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,8 @@ import java.security.Key;
 
 @Component
 public class JwtUtil {
-    @Value("${your_court.jwt_auth_secret}")
+
+    @Value("${application.security.jwt_auth_secret}")
     public String SECRET;
 
     public void validateToken(final String token) {

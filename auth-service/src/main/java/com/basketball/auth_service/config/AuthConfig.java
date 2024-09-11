@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class AuthConfig {
 
-    @Value("${user-service-url}")
+    @Value("${application.user-service-url}")
     String userServiceUrl;
 
     @Bean
