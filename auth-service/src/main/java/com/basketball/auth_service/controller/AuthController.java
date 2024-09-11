@@ -1,18 +1,30 @@
 package com.basketball.auth_service.controller;
 
+import com.basketball.auth_service.domain.UserAuthEntity;
+import com.basketball.auth_service.dto.AuthenticationResponse;
+import com.basketball.auth_service.service.AuthService;
+import com.basketball.codegen_service.codegen.types.LoginInput;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
 @RestController
 @RequestMapping("/v1/auth")
-@RequiredArgsConsructor
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginInput request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterDto> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserAuthEntity request) {
         return ResponseEntity.ok(authService.register(request));
     }
 }

@@ -1,9 +1,10 @@
 package com.basketball.auth_service.service;
 
+import com.basketball.auth_service.client.UserServiceClient;
+import com.basketball.auth_service.domain.UserAuthEntity;
+import com.basketball.auth_service.dto.AuthenticationResponse;
 import com.basketball.auth_service.repository.UserAuthEntityRepository;
 import com.basketball.codegen_service.codegen.types.LoginInput;
-import com.basketball.codegen_service.codegen.types.User;
-import domain.UserAuthEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,20 +17,32 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserAuthEntityRepository repo;
+    private final UserServiceClient userServiceClient;
 
-    public String login(LoginInput request) {
+    public AuthenticationResponse login(LoginInput request) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         if (authenticate.isAuthenticated()) {
-            return jwtService.generateToken(request.getUsername());
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtService.generateToken(request.getUsername()))
+                    .build();
         }
         throw new RuntimeException("Wrong credentials");
     }
 
-    public UserAuthEntity register(UserAuthEntity request) {
+    public AuthenticationResponse register(UserAuthEntity request) {
         if (repo.existsById(request.getUsername())) {
             throw new RuntimeException("");
         }
         repo.save(request);
+        AuthenticationResponse tokens = login(LoginInput.newBuilder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .build());
+        userServiceClient.saveNewUser(request, tokens.getAccessToken());
+        return tokens;
+    }
 
+    public AuthenticationResponse refreshToken() {
+        return null;
     }
 }

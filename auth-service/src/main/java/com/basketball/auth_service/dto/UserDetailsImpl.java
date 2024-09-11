@@ -1,6 +1,6 @@
 package com.basketball.auth_service.dto;
 
-import domain.UserAuthEntity;
+import com.basketball.auth_service.domain.UserAuthEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
