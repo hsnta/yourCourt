@@ -1,7 +1,7 @@
 package com.basketball.gateway_service.filter;
 
 import com.basketball.gateway_service.util.JwtUtil;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.function.Predicate;
 
+@Slf4j
 @Component
 public class JwtAuthenticationFilter implements GatewayFilter {
     private final JwtUtil jwtUtil;
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
-
+        log.info("Requested endpoint: {}", request.getURI().getPath());
         if (isApiSecured.test(request)) {
             if (authMissing(request)) {
                 return onError(exchange);

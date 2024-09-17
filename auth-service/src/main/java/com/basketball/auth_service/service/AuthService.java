@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final UserAuthEntityRepository repo;
     private final UserServiceClient userServiceClient;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public AuthenticationResponse login(LoginInput request) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -29,14 +32,17 @@ public class AuthService {
         throw new RuntimeException("Wrong credentials");
     }
 
+    @Transactional
     public AuthenticationResponse register(UserAuthEntity request) {
         if (repo.existsById(request.getUsername())) {
             throw new RuntimeException("");
         }
+        String nonEncodedPassword = request.getPassword();
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         repo.save(request);
         AuthenticationResponse tokens = login(LoginInput.newBuilder()
                 .username(request.getUsername())
-                .password(request.getPassword())
+                .password(nonEncodedPassword)
                 .build());
         userServiceClient.saveNewUser(request, tokens.getAccessToken());
         return tokens;

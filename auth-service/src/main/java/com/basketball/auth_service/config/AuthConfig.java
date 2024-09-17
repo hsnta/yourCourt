@@ -1,5 +1,6 @@
 package com.basketball.auth_service.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,19 +17,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class AuthConfig {
+public class AuthConfig implements WebMvcConfigurer {
 
     @Value("${application.user-service-url}")
     String userServiceUrl;
 
+    @Autowired
+    private RequestLoggingInterceptor requestLoggingInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // Register the interceptor to apply to all incoming requests
+        registry.addInterceptor(requestLoggingInterceptor);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/**", "/v1/register/**").permitAll())
                 .build();
     }
 
@@ -46,6 +57,7 @@ public class AuthConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
                 "/v1/auth/**",
+                "/v1/register/**",
                 "/swagger-resources/**",
                 "/swagger-ui.html/**",
                 "/swagger-resources/**",
