@@ -2,7 +2,6 @@ package com.basketball.gateway_service.config;
 
 import com.basketball.gateway_service.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,19 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class GatewayConfig {
     private final JwtAuthenticationFilter filter;
-
-    @Value("${gateway.basePath}")
-    private String basePath;
-    @Value("${gateway.userServicePort}")
-    private String userServicePort;
-    @Value("${gateway.workoutServicePort}")
-    private String workoutServicePort;
-    @Value("${gateway.drillServicePort}")
-    private String drillServicePort;
-    @Value("${gateway.userPerformanceServicePort}")
-    private String userPerformanceServicePort;
-    @Value("${gateway.authServicePort}")
-    private String authServicePort;
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
