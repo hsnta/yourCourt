@@ -26,7 +26,8 @@ public class AuthService {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         if (authenticate.isAuthenticated()) {
             return AuthenticationResponse.builder()
-                    .accessToken(jwtService.generateToken(request.getUsername()))
+                    .accessToken(jwtService.generateToken(request.getUsername(), false))
+                    .refreshToken(jwtService.generateToken(request.getUsername(), true))
                     .build();
         }
         throw new RuntimeException("Wrong credentials");
@@ -50,5 +51,10 @@ public class AuthService {
 
     public AuthenticationResponse refreshToken() {
         return null;
+    }
+
+    public void logout() {
+        // invalidate auth token
+        // invalidate refresh token
     }
 }
