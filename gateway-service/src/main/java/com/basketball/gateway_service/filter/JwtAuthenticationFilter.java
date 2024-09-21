@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
         log.info("Requested endpoint: {}", request.getURI().getPath());
         if (isApiSecured.test(request)) {
+            // there should be separate condition for 'refresh' endpoint
             if (authMissing(request)) {
                 return onError(exchange);
             }
@@ -42,6 +43,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
             if (token != null && token.startsWith("Bearer ")) token = token.substring(7);
 
             try {
+                // there should be an auth-service call to validate the token
                 jwtUtil.validateToken(token);
             } catch (Exception e) {
                 return onError(exchange);
