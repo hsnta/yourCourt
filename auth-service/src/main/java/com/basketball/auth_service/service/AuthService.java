@@ -57,4 +57,9 @@ public class AuthService {
         // invalidate auth token
         // invalidate refresh token
     }
+
+    public boolean validateToken(String token, boolean refresh) {
+        return false;
+
+    }
 }

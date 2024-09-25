@@ -5,12 +5,9 @@ import com.basketball.auth_service.dto.AuthenticationResponse;
 import com.basketball.auth_service.service.AuthService;
 import com.basketball.codegen_service.codegen.types.LoginInput;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -29,14 +26,26 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @PostMapping("/refreshToken")
+    @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken() {
         return ResponseEntity.ok(authService.refreshToken());
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestParam boolean refresh) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        if (authService.validateToken(token, refresh)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         authService.logout();
-        return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -6,11 +6,17 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @RequiredArgsConstructor
 public class GatewayConfig {
     private final JwtAuthenticationFilter filter;
+
+    @Bean
+    public WebClient authServiceWebClient() {
+        return WebClient.builder().build();
+    }
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {

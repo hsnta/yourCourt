@@ -1,13 +1,16 @@
 package com.basketball.gateway_service.filter;
 
 import com.basketball.gateway_service.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -16,8 +19,10 @@ import java.util.function.Predicate;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GatewayFilter {
     private final JwtUtil jwtUtil;
+    private final WebClient authServiceWebClient;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -28,28 +33,36 @@ public class JwtAuthenticationFilter implements GatewayFilter {
         ServerHttpRequest request = exchange.getRequest();
 
         final List<String> apiEndpoints = List.of("/v1/auth/login", "/v1/auth/register", "/eureka");
-
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
         log.info("Requested endpoint: {}", request.getURI().getPath());
-        if (isApiSecured.test(request)) {
-            // there should be separate condition for 'refresh' endpoint
-            if (authMissing(request)) {
-                return onError(exchange);
-            }
+        if (!isApiSecured.test(request)) {
+            return chain.filter(exchange);
 
-            String token = request.getHeaders().getOrEmpty("Authorization").get(0);
-
-            if (token != null && token.startsWith("Bearer ")) token = token.substring(7);
-
-            try {
-                // there should be an auth-service call to validate the token
-                jwtUtil.validateToken(token);
-            } catch (Exception e) {
-                return onError(exchange);
-            }
         }
-        return chain.filter(exchange);
+        if (authMissing(request)) {
+            return onError(exchange);
+        }
+
+        String bearerToken = request.getHeaders().getOrEmpty("Authorization").get(0);
+
+        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+            return onError(exchange);
+        }
+        boolean isRefreshEndpoint = request.getURI().getPath().contains("/v1/auth/refresh");
+        try {
+            return authServiceWebClient.post()
+                    .uri(uriBuilder -> uriBuilder.path("lb://AUTH-SERVICE/validate")
+                            .queryParam("refresh", isRefreshEndpoint)
+                            .build())
+                    .header(HttpHeaders.AUTHORIZATION, bearerToken)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .then(chain.filter(exchange))
+                    .onErrorResume(error -> onError(exchange));
+        } catch (Exception e) {
+            return onError(exchange);
+        }
     }
 
     private Mono<Void> onError(ServerWebExchange exchange) {
