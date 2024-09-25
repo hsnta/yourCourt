@@ -1,6 +1,5 @@
 package com.basketball.gateway_service.filter;
 
-import com.basketball.gateway_service.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -21,12 +20,7 @@ import java.util.function.Predicate;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GatewayFilter {
-    private final JwtUtil jwtUtil;
     private final WebClient authServiceWebClient;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -25,9 +27,10 @@ public class AuthService {
     public AuthenticationResponse login(LoginInput request) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         if (authenticate.isAuthenticated()) {
+            int logoutCounter = repo.getLogoutCounterByUserName(request.getUsername()).orElseThrow();
             return AuthenticationResponse.builder()
-                    .accessToken(jwtService.generateToken(request.getUsername(), false))
-                    .refreshToken(jwtService.generateToken(request.getUsername(), true))
+                    .accessToken(jwtService.generateToken(Map.of("ctr", logoutCounter), request.getUsername(), false))
+                    .refreshToken(jwtService.generateToken(Map.of("ctr", logoutCounter), request.getUsername(), true))
                     .build();
         }
         throw new RuntimeException("Wrong credentials");
@@ -36,10 +39,11 @@ public class AuthService {
     @Transactional
     public AuthenticationResponse register(UserAuthEntity request) {
         if (repo.existsById(request.getUsername())) {
-            throw new RuntimeException("");
+            throw new RuntimeException("User already exists");
         }
         String nonEncodedPassword = request.getPassword();
         request.setPassword(passwordEncoder.encode(request.getPassword()));
+        request.setLogoutCounter(0);
         repo.save(request);
         AuthenticationResponse tokens = login(LoginInput.newBuilder()
                 .username(request.getUsername())
@@ -49,17 +53,30 @@ public class AuthService {
         return tokens;
     }
 
-    public AuthenticationResponse refreshToken() {
-        return null;
+    public AuthenticationResponse refreshToken(String token) {
+        String userName = jwtService.extractUsername(token, true);
+        int logoutCounter = repo.getLogoutCounterByUserName(userName).orElseThrow();
+        return AuthenticationResponse.builder()
+                .accessToken(jwtService.generateToken(Map.of("ctr", logoutCounter), userName, false))
+                .refreshToken(jwtService.generateToken(Map.of("ctr", logoutCounter), userName, true))
+                .build();
     }
 
-    public void logout() {
+    @Transactional
+    public void logout(String token) {
         // invalidate auth token
         // invalidate refresh token
+        String userName = jwtService.extractUsername(token, false);
+        UserAuthEntity user = repo.findByUsername(userName).orElseThrow();
+        user.setLogoutCounter(user.getLogoutCounter() + 1);
+        repo.save(user);
     }
 
-    public boolean validateToken(String token, boolean refresh) {
-        return false;
+    public boolean validateToken(String token, boolean isRefresh) {
+        String userName = jwtService.extractUsername(token, isRefresh);
+        int logoutCounter = repo.getLogoutCounterByUserName(userName).orElseThrow();
+
+        return jwtService.isTokenValid(token, isRefresh, logoutCounter);
 
     }
 }

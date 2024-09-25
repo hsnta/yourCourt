@@ -6,18 +6,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +28,6 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    private final UserDetailsService userDetailsService;
-
     public String extractUsername(String token, boolean isRefreshToken) {
         return extractClaim(token, Claims::getSubject, isRefreshToken);
     }
@@ -43,42 +37,25 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(String username, boolean isRefreshToken) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return generateToken(userDetails, isRefreshToken);
+
+    public String generateToken(Map<String, Object> extraClaims, String username, boolean isRefreshToken) {
+        return buildToken(extraClaims, username, jwtExpiration, isRefreshToken);
     }
 
-    public String generateToken(UserDetails userDetails, boolean isRefreshToken) {
-        return generateToken(new HashMap<>(), userDetails, isRefreshToken);
-    }
-
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            boolean isRefreshToken
-    ) {
-        return buildToken(extraClaims, userDetails, jwtExpiration, isRefreshToken);
-    }
-
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expiration,
-            boolean isRefreshToken
-    ) {
+    private String buildToken(Map<String, Object> extraClaims, String userName,
+                              long expiration, boolean isRefreshToken) {
         return Jwts
                 .builder()
                 .claims(extraClaims)
-                .subject(userDetails.getUsername())
+                .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(isRefreshToken), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails, boolean isRefreshToken) {
-        final String username = extractUsername(token, isRefreshToken);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token, isRefreshToken);
+    public boolean isTokenValid(String token, boolean isRefreshToken, long allowedCounterVal) {
+        return !isTokenExpired(token, isRefreshToken) && extractClaim(token, claims -> (int) (claims.get("ctr")), isRefreshToken) >= allowedCounterVal;
     }
 
     private boolean isTokenExpired(String token, boolean isRefreshToken) {
@@ -90,8 +67,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token, boolean isRefreshToken) {
-        return Jwts
-                .parser()
+        return Jwts.parser()
                 .setSigningKey(getSignInKey(isRefreshToken))
                 .build()
                 .parseSignedClaims(token)

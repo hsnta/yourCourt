@@ -27,16 +27,19 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refreshToken() {
-        return ResponseEntity.ok(authService.refreshToken());
-    }
-
-    @PostMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestParam boolean refresh) {
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestHeader("Authorization") String token) {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
-        if (authService.validateToken(token, refresh)) {
+        return ResponseEntity.ok(authService.refreshToken(token));
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestParam boolean isRefresh) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        if (authService.validateToken(token, isRefresh)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -44,8 +47,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        authService.logout();
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        authService.logout(token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
