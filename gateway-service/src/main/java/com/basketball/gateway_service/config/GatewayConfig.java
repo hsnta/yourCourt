@@ -14,11 +14,6 @@ public class GatewayConfig {
     private final JwtAuthenticationFilter filter;
 
     @Bean
-    public WebClient authServiceWebClient() {
-        return WebClient.builder().build();
-    }
-
-    @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user-service", r -> r.path("/v1/user/**")

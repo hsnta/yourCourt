@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestParam boolean isRefresh) {
+    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestParam(required = false, defaultValue = "false") boolean isRefresh) {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }

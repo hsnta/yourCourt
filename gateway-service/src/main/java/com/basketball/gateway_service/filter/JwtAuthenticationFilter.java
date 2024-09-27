@@ -1,5 +1,6 @@
 package com.basketball.gateway_service.filter;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -20,16 +21,23 @@ import java.util.function.Predicate;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GatewayFilter {
-    private final WebClient authServiceWebClient;
+    private final WebClient.Builder webClientBuilder;
+    private WebClient authServiceWebClient;
+
+    @PostConstruct
+    public void init() {
+        this.authServiceWebClient = webClientBuilder.baseUrl("lb://AUTH-SERVICE").build();
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        final List<String> apiEndpoints = List.of("/v1/auth/login", "/v1/auth/register", "/eureka");
+        final List<String> apiEndpoints = List.of("/v1/auth/login", "/v1/auth/register", "/v1/auth/validate", "/eureka");
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
         log.info("Requested endpoint: {}", request.getURI().getPath());
+        log.info("Auth: {}", request.getHeaders().getOrEmpty("Authorization").get(0));
         if (!isApiSecured.test(request)) {
             return chain.filter(exchange);
 
@@ -46,14 +54,17 @@ public class JwtAuthenticationFilter implements GatewayFilter {
         boolean isRefreshEndpoint = request.getURI().getPath().contains("/v1/auth/refresh");
         try {
             return authServiceWebClient.post()
-                    .uri(uriBuilder -> uriBuilder.path("lb://AUTH-SERVICE/validate")
+                    .uri(uriBuilder -> uriBuilder.path("/v1/auth/validate")
                             .queryParam("refresh", isRefreshEndpoint)
                             .build())
                     .header(HttpHeaders.AUTHORIZATION, bearerToken)
                     .retrieve()
                     .bodyToMono(Void.class)
                     .then(chain.filter(exchange))
-                    .onErrorResume(error -> onError(exchange));
+                    .onErrorResume(error -> {
+                        log.info(error.toString());
+                        return onError(exchange);
+                    });
         } catch (Exception e) {
             return onError(exchange);
         }

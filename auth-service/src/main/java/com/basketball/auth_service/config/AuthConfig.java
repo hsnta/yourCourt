@@ -39,7 +39,7 @@ public class AuthConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/**", "/v1/register/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/**").permitAll())
                 .build();
     }
 
@@ -56,12 +56,7 @@ public class AuthConfig implements WebMvcConfigurer {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
-                "/v1/auth/**",
-                "/v1/register/**",
-                "/swagger-resources/**",
-                "/swagger-ui.html/**",
-                "/swagger-resources/**",
-                "/swagger-ui/**");
+                "/v1/auth/**");
     }
 
     @Bean

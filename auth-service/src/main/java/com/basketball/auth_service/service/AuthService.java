@@ -6,6 +6,7 @@ import com.basketball.auth_service.dto.AuthenticationResponse;
 import com.basketball.auth_service.repository.UserAuthEntityRepository;
 import com.basketball.codegen_service.codegen.types.LoginInput;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -75,7 +77,8 @@ public class AuthService {
     public boolean validateToken(String token, boolean isRefresh) {
         String userName = jwtService.extractUsername(token, isRefresh);
         int logoutCounter = repo.getLogoutCounterByUserName(userName).orElseThrow();
-
+        log.info("Username from token: {}", userName);
+        log.info("logoutCounter: {}", logoutCounter);
         return jwtService.isTokenValid(token, isRefresh, logoutCounter);
 
     }

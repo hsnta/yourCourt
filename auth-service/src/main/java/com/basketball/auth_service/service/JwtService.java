@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -39,7 +41,7 @@ public class JwtService {
 
 
     public String generateToken(Map<String, Object> extraClaims, String username, boolean isRefreshToken) {
-        return buildToken(extraClaims, username, jwtExpiration, isRefreshToken);
+        return buildToken(extraClaims, username, isRefreshToken ? refreshExpiration : jwtExpiration, isRefreshToken);
     }
 
     private String buildToken(Map<String, Object> extraClaims, String userName,
@@ -55,6 +57,7 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, boolean isRefreshToken, long allowedCounterVal) {
+        log.info("counter from token: {}", extractClaim(token, claims -> (int) (claims.get("ctr")), isRefreshToken).toString());
         return !isTokenExpired(token, isRefreshToken) && extractClaim(token, claims -> (int) (claims.get("ctr")), isRefreshToken) >= allowedCounterVal;
     }
 
