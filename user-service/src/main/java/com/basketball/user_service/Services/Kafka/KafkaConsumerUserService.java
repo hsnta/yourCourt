@@ -13,6 +13,11 @@ public class KafkaConsumerUserService {
     @KafkaListener(topics = "drill_service_topic", groupId = "group_id")
     public void consume(String message) {
         messageProcessorUserService.getMessage(message);
+    }
+
+    @KafkaListener(topics = "to_user_service", groupId = "group_id")
+    public void consumeUserDetails(String message) {
+        messageProcessorUserService.getMessage(message);
 
     }
 }

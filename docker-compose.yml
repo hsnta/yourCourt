@@ -95,6 +95,7 @@ services:
     env_file:
       - "docker_local.env"
 
+#    TODO add healthcheck (all services should wait till eureka is up)
   registry-service:
     build:
       context: ./service-registry
@@ -109,6 +110,20 @@ services:
     env_file:
       - "docker_local.env"
 
+  gateway-service:
+    build:
+      context: ./gateway-service
+    container_name: "gateway-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${GATEWAY_SERVICE_PORT}:${GATEWAY_SERVICE_PORT}"
+    env_file:
+      - "docker_local.env"
+    tty: true
+
   drill-service:
     build:
       context: ./drill-service
@@ -117,6 +132,7 @@ services:
       - mongo
       - postgre-db
       - registry-service
+      - gateway-service
     ports:
       - "${DRILL_SERVICE_PORT}:${DRILL_SERVICE_PORT}"
     env_file:
@@ -131,6 +147,7 @@ services:
       - mongo
       - postgre-db
       - registry-service
+      - gateway-service
     ports:
       - "${USER_PERFORMANCE_SERVICE_PORT}:${USER_PERFORMANCE_SERVICE_PORT}"
     env_file:
@@ -145,6 +162,7 @@ services:
       - mongo
       - postgre-db
       - registry-service
+      - gateway-service
     ports:
       - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
     env_file:
@@ -159,8 +177,24 @@ services:
       - mongo
       - postgre-db
       - registry-service
+      - gateway-service
     ports:
       - "${WORKOUT_SERVICE_PORT}:${WORKOUT_SERVICE_PORT}"
+    env_file:
+      - "docker_local.env"
+    tty: true
+
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: "auth-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+      - gateway-service
+    ports:
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
     env_file:
       - "docker_local.env"
     tty: true
