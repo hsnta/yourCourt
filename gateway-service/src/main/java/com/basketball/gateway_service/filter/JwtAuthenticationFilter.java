@@ -32,12 +32,11 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-
+        // TODO '/validate' should be hidden from public
         final List<String> apiEndpoints = List.of("/v1/auth/login", "/v1/auth/register", "/v1/auth/validate", "/eureka");
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
         log.info("Requested endpoint: {}", request.getURI().getPath());
-        log.info("Auth: {}", request.getHeaders().getOrEmpty("Authorization").get(0));
         if (!isApiSecured.test(request)) {
             return chain.filter(exchange);
 
@@ -61,10 +60,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
                     .retrieve()
                     .bodyToMono(Void.class)
                     .then(chain.filter(exchange))
-                    .onErrorResume(error -> {
-                        log.info(error.toString());
-                        return onError(exchange);
-                    });
+                    .onErrorResume(error -> onError(exchange));
         } catch (Exception e) {
             return onError(exchange);
         }
@@ -73,6 +69,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     private Mono<Void> onError(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        log.error("Request to {} -> Unauthorized", exchange.getRequest().getURI().getPath());
         return response.setComplete();
     }
 

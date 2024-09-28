@@ -95,6 +95,7 @@ services:
     env_file:
       - "docker_local.env"
 
+#    TODO add healthcheck (all services should wait till eureka is up)
   registry-service:
     build:
       context: ./service-registry

@@ -77,8 +77,6 @@ public class AuthService {
     public boolean validateToken(String token, boolean isRefresh) {
         String userName = jwtService.extractUsername(token, isRefresh);
         int logoutCounter = repo.getLogoutCounterByUserName(userName).orElseThrow();
-        log.info("Username from token: {}", userName);
-        log.info("logoutCounter: {}", logoutCounter);
         return jwtService.isTokenValid(token, isRefresh, logoutCounter);
 
     }

@@ -202,7 +202,6 @@ input UserInput {
     email: String!
     firstName: String
     lastName: String
-    password: String!
     # Add any other fields relevant to creating/updating a User
 }
 

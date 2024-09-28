@@ -57,7 +57,6 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, boolean isRefreshToken, long allowedCounterVal) {
-        log.info("counter from token: {}", extractClaim(token, claims -> (int) (claims.get("ctr")), isRefreshToken).toString());
         return !isTokenExpired(token, isRefreshToken) && extractClaim(token, claims -> (int) (claims.get("ctr")), isRefreshToken) >= allowedCounterVal;
     }
 
