@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GatewayConfig {
     private final JwtAuthenticationFilter filter;
 
+    // TODO remove filters from here and define security config separately for handling role-based auth OR handle roles inside the filter
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
