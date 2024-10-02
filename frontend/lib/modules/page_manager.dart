@@ -11,7 +11,7 @@ final Map<int, Widget Function()> pageMap = {
   2: () => const Dashboard(),
   3: () => const Chats(),
   // 4: () => const Page5(),
- 4: () => const CurrentDrillPage(),
+  4: () => const CurrentDrillPage(),
 };
 
 Widget getCurrentPage(int currentPage) {
