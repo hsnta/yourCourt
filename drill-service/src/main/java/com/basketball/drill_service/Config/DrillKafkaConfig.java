@@ -1,7 +1,5 @@
 package com.basketball.drill_service.Config;
 
-import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
-import com.basketball.drill_service.Serializers.DrillCreationRequestDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -12,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
-import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -34,7 +29,7 @@ public class DrillKafkaConfig {
     private String autoOffsetReset;
 
     @Bean
-    public ConsumerFactory<String, String> drillCreationconsumerFactory() {
+    public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -45,9 +40,9 @@ public class DrillKafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> drillCreationListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(drillCreationconsumerFactory());
+        factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 

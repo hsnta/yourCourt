@@ -6,7 +6,9 @@ type Query {
     getWorkoutById(workoutId: String!): Workout
     getAllWorkoutsByUserId(userId: String!): [Workout]
 
-    getAllCustomWorkoutDrills: [DrillType]
+    getAllCustomWorkoutDrills: [CustomWorkoutDrill]
+
+    getDrillIdentificationByDrillType(drillType: DrillType): DrillIdentification
 
     getUserPerformanceById(userPerformanceId: ID!): UserPerformance
     getUserPerformanceByUserId(userId: String!): UserPerformance
@@ -25,9 +27,11 @@ type Mutation {
 
     createWorkoutFromRecommendation(recommendation: WorkoutInput!): Workout
 
-    createCustomWorkoutDrill(drillType: DrillType): CustomWorkoutDrill
+    createCustomWorkoutDrill(customWorkoutDrill: CustomWorkoutDrillInput): CustomWorkoutDrill
 
     createWorkoutByCustomWorkoutDrills(customWorkoutDrills: CustomWorkoutDrillsRequest!): Workout
+
+    createDrillIdentification(drillIdentification: DrillIdentificationInput): DrillIdentification
 
     createUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
     updateUserPerformance(userPerformanceInput: UserPerformanceInput!): UserPerformance
@@ -42,31 +46,26 @@ input DrillInput {
     userId: String!
     workoutId: String!
     drillType: DrillType!
-    isSingle: Boolean!
     status: DrillStatus!
-}
-
-input CustomWorkoutDrillInput {
-    drillType: DrillType!
 }
 
 input CustomWorkoutDrillsRequest {
     userId: String!
     workoutName: String!
-    drillTypes: [DrillType]!
+    customWorkoutDrills: [CustomWorkoutDrillInput]!
 }
 
 input ShotsTakenInput {
-    threePointLeftCorner: Int!
-    threePointRightCorner: Int!
-    threePointLeftWing: Int!
-    threePointRightWing: Int!
-    threePointMiddle: Int!
-    twoPointLeftCorner: Int!
-    twoPointRightCorner: Int!
-    twoPointLeftWing: Int!
-    twoPointRightWing: Int!
-    twoPointMiddle: Int!
+    threePointLeftCorner: Int
+    threePointRightCorner: Int
+    threePointLeftWing: Int
+    threePointRightWing: Int
+    threePointMiddle: Int
+    twoPointLeftCorner: Int
+    twoPointRightCorner: Int
+    twoPointLeftWing: Int
+    twoPointRightWing: Int
+    twoPointMiddle: Int
 }
 
 input ShotsTakenThresholdsInput {
@@ -123,17 +122,12 @@ type Drill {
     workoutId: String!
     userId: String!
     drillType: DrillType!
-    isSingle: Boolean!
     shotsTaken: ShotsTaken
     shotsMade: ShotsTaken
     shotsRequired: ShotsTaken
     status: DrillStatus!
 }
 
-type CustomWorkoutDrill {
-    customDrillId: String!
-    drillType: DrillType!
-}
 
 type ShotsTaken {
     threePointLeftCorner: Int!
@@ -146,26 +140,6 @@ type ShotsTaken {
     twoPointLeftWing: Int!
     twoPointRightWing: Int!
     twoPointMiddle: Int!
-}
-
-type ShotsTakenThresholds {
-    threePointLeftCorner: [Int]!
-    threePointRightCorner: [Int]!
-    threePointLeftWing: [Int]!
-    threePointRightWing: [Int]!
-    threePointMiddle: [Int]!
-    twoPointLeftCorner: [Int]!
-    twoPointRightCorner: [Int]!
-    twoPointLeftWing: [Int]!
-    twoPointRightWing: [Int]!
-    twoPointMiddle: [Int]!
-}
-
-type CustomDrillIdentification {
-    drillType: DrillType!
-    isSingle: Boolean!
-    shotsToBeTaken: ShotsTaken!
-    timer: String!
 }
 
 input UserPerformanceInput {
@@ -206,22 +180,6 @@ input WorkoutInput {
     status: String!
 }
 
-input WorkoutBySelectionInput {
-    workoutSelectionList: [WorkoutSelectionInput]!
-    userId: String!
-}
-
-input WorkoutSelectionInput {
-    workoutId: ID
-    workoutType: WorkoutType
-    drills: [DrillModelInput]
-}
-
-input DrillModelInput {
-    drillType: DrillType
-    isEnabled: Boolean
-}
-
 enum WorkoutType {
     DRIBBLING
     THREE_PT_SHOTS
@@ -249,26 +207,67 @@ type Workout {
 type DrillModel {
     drillId: ID!
     drillType: DrillType
-    isEnabled: Boolean
+    drillName: String
+    drillDifficulty: Int
+    categories: [WorkoutType]
+    tags: [Tags]
+    description: String
 }
 
-type WorkoutSelection {
-    workoutId: ID!
-    workoutType: WorkoutType
-    drills: [DrillModel]
-    lastUpdatedDate: String
-    creationDate: String
-    lastUpdatedBy: String
-    createdBy: String
+type CustomWorkoutDrill {
+    customDrillId: String!
+    drillType: DrillType!
+    drillName: String!
+    drillDifficulty: DrillDifficulty
+    categories: [WorkoutType]
+    tags: [Tags]
+    description: String
 }
 
-type WorkoutBySelection {
-    workoutSelectionList: [WorkoutSelection]!
-    userId: String!
+input CustomWorkoutDrillInput {
+    drillType: DrillType!
+    drillName: String!
+    drillDifficulty: DrillDifficulty!
+    categories: [WorkoutType]!
+    tags: [Tags]
+    description: String!
 }
 
 type DrillCreationRequest {
     workoutId: ID!
     userId: ID!
-    drillTypes: [DrillType]
+    customWorkoutDrills: [CustomWorkoutDrill]
+}
+
+type DrillIdentification {
+    isSingle: Boolean
+    drillType: DrillType!
+    shotsToBeTaken: ShotsTaken!
+    timer: String!
+    drillDifficulty: DrillDifficulty
+}
+
+input DrillIdentificationInput {
+    isSingle: Boolean
+    drillType: DrillType!
+    shotsToBeTaken: ShotsTakenInput
+    timer: String
+    drillDifficulty: DrillDifficulty
+}
+
+enum DrillDifficulty {
+    EASY
+    INTERMEDIATE
+    ADVANCED
+    NBA
+}
+
+enum Tags {
+    BASKETBALL
+    PARTNER
+    OUTSIDE
+    GYM
+    SAND_PIT
+    LADDER
+    CONE
 }

@@ -1,6 +1,7 @@
 package com.basketball.workout_service.Controllers;
 
 import com.basketball.codegen_service.codegen.types.CustomWorkoutDrill;
+import com.basketball.codegen_service.codegen.types.CustomWorkoutDrillInput;
 import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
@@ -24,7 +25,7 @@ public class DgsCustomWorkoutDrillController {
     KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     @DgsQuery
-    public List<DrillType> getAllCustomWorkoutDrills() {
+    public List<CustomWorkoutDrill> getAllCustomWorkoutDrills() {
         try {
             return customWorkoutDrillService.getAllCustomWorkoutDrills();
         } catch (WorkoutNotFoundException e) {
@@ -34,11 +35,11 @@ public class DgsCustomWorkoutDrillController {
     }
 
     @DgsMutation
-    public CustomWorkoutDrill createCustomWorkoutDrill(@InputArgument("drillType") DrillType drillType) {
+    public CustomWorkoutDrill createCustomWorkoutDrill(@InputArgument("customWorkoutDrill") CustomWorkoutDrillInput customWorkoutDrill) {
         try {
-            return customWorkoutDrillService.createCustomWorkoutDrill(drillType);
+            return customWorkoutDrillService.createCustomWorkoutDrill(customWorkoutDrill);
         } catch (WorkoutNotFoundException e) {
-            kafkaProducerWorkoutService.sendMessageToUI("message: " + drillType);
+            kafkaProducerWorkoutService.sendMessageToUI("message: " + customWorkoutDrill);
         }
         return null;
     }

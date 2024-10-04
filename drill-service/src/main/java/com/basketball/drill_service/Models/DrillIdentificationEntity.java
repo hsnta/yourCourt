@@ -1,5 +1,6 @@
 package com.basketball.drill_service.Models;
 
+import com.basketball.codegen_service.codegen.types.DrillDifficulty;
 import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import jakarta.persistence.Embedded;
@@ -18,11 +19,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "CUSTOM_DRILLS")
-public class CustomDrillEntity extends DatabaseDefaultFields {
+@Document(collection = "DRILL_IDENTIFICATION")
+public class DrillIdentificationEntity extends DatabaseDefaultFields {
 
     @Id
-    String drillId;
+    String drillIdentificationId;
 
     Boolean isSingle;
 
@@ -33,4 +34,6 @@ public class CustomDrillEntity extends DatabaseDefaultFields {
     ShotsTaken shotsToBeTaken;
 
     String timer;
+
+    DrillDifficulty drillDifficulty;
 }
