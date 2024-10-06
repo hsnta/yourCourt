@@ -1,12 +1,13 @@
 package com.basketball.drill_service.Services;
 
-import com.basketball.codegen_service.codegen.types.*;
-import com.basketball.drill_service.Utils.DrillUtils;
+import com.basketball.codegen_service.codegen.types.CustomWorkoutDrill;
+import com.basketball.codegen_service.codegen.types.Drill;
+import com.basketball.codegen_service.codegen.types.DrillCreationRequest;
+import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import com.basketball.drill_service.Exceptions.DrillNotFoundException;
-import com.basketball.drill_service.Models.*;
+import com.basketball.drill_service.Models.DrillEntity;
 import com.basketball.drill_service.Repositories.DrillRepository;
-
-
+import com.basketball.drill_service.Utils.DrillUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,6 @@ public class DrillService {
     public Drill createDrill(Drill drill) {
         DrillEntity drillEntity = modelMapper.map(drill, DrillEntity.class);
         drillEntity.setDrillId(DrillUtils.createUniqueDrillId());
-        drillEntity.setIsActive(true);
-        drillEntity.setCreatedBy(DrillUtils.getUserName());
-        drillEntity.setCreationDate(DrillUtils.getCurrentSqlTime());
         drillEntity.setShotsRequired(new ShotsTaken());
         drillEntity.setShotsToBeTaken(new ShotsTaken());
         drillEntity.setShotsMade(new ShotsTaken());
@@ -56,7 +54,7 @@ public class DrillService {
     public List<Drill> createDrillFromDrillCreationRequest(DrillCreationRequest drillCreationRequest) {
         List<DrillEntity> drillEntityList = new ArrayList<>();
         drillCreationRequest.getCustomWorkoutDrills().forEach(customWorkoutDrill -> {
-            drillEntityList.add(DrillEntity.builder()
+            DrillEntity build = DrillEntity.builder()
                     .drillId(DrillUtils.createUniqueDrillId())
                     .userId(drillCreationRequest.getUserId())
                     .workoutId(drillCreationRequest.getWorkoutId())
@@ -66,13 +64,12 @@ public class DrillService {
                     .categories(customWorkoutDrill.getCategories())
                     .tags(customWorkoutDrill.getTags())
                     .description(customWorkoutDrill.getDescription())
-                    .isActive(true)
-                    .createdBy(drillCreationRequest.getUserId())
-                    .creationDate(DrillUtils.getCurrentSqlTime())
                     .shotsRequired(new ShotsTaken())
                     .shotsToBeTaken(new ShotsTaken())
                     .shotsMade(new ShotsTaken())
-                    .build());
+                    .build();
+            updateBaseDefaultFields(build);
+            drillEntityList.add(build);
 
         });
         drillRepository.saveAll(drillEntityList);
@@ -98,9 +95,8 @@ public class DrillService {
     }
 
     public Boolean deleteDrill(String id) {
-        drillRepository.findById(id).orElseThrow(() ->
-                        new DrillNotFoundException("Drill not found for ID: " + id))
-                .setIsActive(false);
+        drillRepository.delete(drillRepository.findById(id).orElseThrow(() ->
+                new DrillNotFoundException("Drill not found for ID: " + id)));
         return true;
     }
 
@@ -115,8 +111,14 @@ public class DrillService {
     }
 
     private static void updateBaseDefaultFields(DrillEntity drillEntity) {
-        drillEntity.setLastUpdatedBy(DrillUtils.getUserName());
-        drillEntity.setLastUpdatedDate(DrillUtils.getCurrentSqlTime());
+        String userName = DrillUtils.getUserName();
+        String time = DrillUtils.getCurrentSqlTime().toString();
+        drillEntity.setLastUpdatedBy(userName);
+        drillEntity.setLastUpdatedDate(time);
+        if (drillEntity.getCreationDate() != null) {
+            drillEntity.setCreatedBy(userName);
+            drillEntity.setCreationDate(time);
+        }
     }
 
     private ShotsTaken checkAndSetShots(ShotsTaken shotsTaken, Integer numberOfShots) {

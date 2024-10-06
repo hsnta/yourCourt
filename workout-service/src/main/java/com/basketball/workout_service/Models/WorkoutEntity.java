@@ -1,9 +1,9 @@
 package com.basketball.workout_service.Models;
 
+import com.basketball.codegen_service.codegen.types.DatabaseDefaultFields;
 import com.basketball.codegen_service.codegen.types.WorkoutType;
 import jakarta.persistence.Id;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "WORKOUT")

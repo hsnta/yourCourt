@@ -2,9 +2,9 @@ package com.basketball.user_service.Services;
 import com.basketball.codegen_service.codegen.types.User;
 import com.basketball.user_service.Exceptions.UserNotFoundException;
 import com.basketball.user_service.Models.UserEntity;
-import com.basketball.user_service.Utils.UserMapper;
 import com.basketball.user_service.Repositories.UserRepository;
 import com.basketball.user_service.Utils.UserUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,54 +18,58 @@ public class UserService {
     UserRepository userRepository;
 
     @Autowired
-    UserMapper userMapper;
+    ModelMapper modelMapper;
 
     public User getUserById(String id) {
-        return userMapper.toDto(userRepository.findById(id).orElseThrow(() ->
-                new UserNotFoundException("User not found for ID: " + id)));
+        return modelMapper.map((userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("User not found for ID: " + id))), User.class);
     }
 
     public User getUserByUsername(String username) {
-        return userMapper.toDto(userRepository.findByUsername(username).orElseThrow(() ->
-                new UserNotFoundException("User not found for username: " + username)));
+        return modelMapper.map((userRepository.findByUsername(username).orElseThrow(() ->
+                new UserNotFoundException("User not found for username: " + username))), User.class);
     }
 
     public User getUserByEmail(String email) {
-        return userMapper.toDto(userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException("User not found for email: " + email)));
+        return modelMapper.map((userRepository.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException("User not found for email: " + email))), User.class);
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userMapper::toDto)
+                .map(userEntity -> modelMapper.map(userEntity, User.class))
                 .collect(Collectors.toList());
     }
 
     public User createUser(User user) {
-        UserEntity userEntity = userMapper.toEntity(user);
+        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         userEntity.setUserId(UserUtils.createUniqueUserId());
-        userEntity.setCreatedBy(UserUtils.getUserName());
-        userEntity.setCreationDate(UserUtils.getCurrentSqlTime());
         updateBaseDefaultFields(userEntity);
-        return userMapper.toDto(userRepository.save(userEntity));
+        return modelMapper.map(userRepository.save(userEntity), User.class);
     }
 
     public User updateUser(User user) {
         UserEntity userEntity = userRepository.findById(user.getUserId()).orElseThrow(() ->
                 new UserNotFoundException("User not found for ID: " + user.getUserId()));
         updateBaseDefaultFields(userEntity);
-        return userMapper.toDto(userRepository.save(userEntity));
+        return modelMapper.map(userRepository.save(userEntity), User.class);
     }
 
     public Boolean deleteUser(String userId) {
-        userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException("User not found for ID: " + userId))
-                .setIsActive(false);
+        userRepository.delete(userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("User not found for ID: " + userId)));
+
         return true;
     }
 
     private static void updateBaseDefaultFields(UserEntity userEntity) {
-        userEntity.setLastUpdatedBy(UserUtils.getUserName());
-        userEntity.setLastUpdatedDate(UserUtils.getCurrentSqlTime());
+        String userName = UserUtils.getUserName();
+        String time = UserUtils.getCurrentSqlTime().toString();
+        userEntity.setLastUpdatedBy(userName);
+        userEntity.setLastUpdatedDate(time);
+        if (userEntity.getCreationDate() != null) {
+            userEntity.setCreatedBy(userName);
+            userEntity.setCreationDate(time);
+        }
     }
 }

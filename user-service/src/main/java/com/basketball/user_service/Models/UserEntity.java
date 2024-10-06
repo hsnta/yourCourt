@@ -1,19 +1,19 @@
 package com.basketball.user_service.Models;
 
+import com.basketball.codegen_service.codegen.types.DatabaseDefaultFields;
 import jakarta.persistence.Id;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "USER")
-public class UserEntity extends DatabaseDefaultFields{
+public class UserEntity extends DatabaseDefaultFields {
 
     @Id
     private String userId;

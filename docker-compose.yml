@@ -165,6 +165,20 @@ services:
       - "docker_local.env"
     tty: true
 
+  video-service:
+    build:
+      context: ./video-service
+    container_name: "video-service"
+    depends_on:
+      - mongo
+      - postgre-db
+      - registry-service
+    ports:
+      - "${VIDEO_SERVICE_PORT}:${VIDEO_SERVICE_PORT}"
+    env_file:
+      - "docker_local.env"
+    tty: true
+
 volumes:
   mongodb-data-vol:
   pgdata-vol:

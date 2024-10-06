@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface WorkoutRepository extends MongoRepository<WorkoutEntity, String> {
-    List<WorkoutEntity> findAllByUserIdAndIsActiveTrue(String userId);
+    List<WorkoutEntity> findAllByUserId(String userId);
 }

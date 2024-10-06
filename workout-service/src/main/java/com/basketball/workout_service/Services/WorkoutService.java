@@ -5,8 +5,8 @@ import com.basketball.codegen_service.codegen.types.WorkoutType;
 import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
-import com.basketball.workout_service.Utils.CustomWorkoutDrillMapper;
 import com.basketball.workout_service.Utils.WorkoutUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +22,14 @@ public class WorkoutService {
     KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     @Autowired
-    CustomWorkoutDrillMapper customWorkoutDrillMapper;
+    ModelMapper modelMapper;
 
     public WorkoutEntity getWorkoutById(String workoutId) {
         return workoutRepository.findById(workoutId).orElseThrow();
     }
 
     public List<WorkoutEntity> getAllWorkoutsByUserId(String userId) {
-        return workoutRepository.findAllByUserIdAndIsActiveTrue(userId);
+        return workoutRepository.findAllByUserId(userId);
     }
 
     public List<WorkoutEntity> getAllWorkouts() {
@@ -43,8 +43,6 @@ public class WorkoutService {
                 .name(customWorkoutDrillsRequest.getWorkoutName())
                 .workoutType(WorkoutType.CUSTOM_WORKOUT)
                 .status("CREATED")
-                .createdBy(customWorkoutDrillsRequest.getUserId())
-                .creationDate(WorkoutUtils.getCurrentSqlTime())
                 .build();
         updateBaseDefaultFields(workoutEntity);
 
@@ -52,7 +50,7 @@ public class WorkoutService {
                 .workoutId(workoutEntity.getWorkoutId())
                 .userId(workoutEntity.getUserId())
                 .customWorkoutDrills(customWorkoutDrillsRequest.getCustomWorkoutDrills().stream()
-                        .map(customWorkoutDrillMapper::toCustomDrillFromInput)
+                        .map(customWorkoutDrillInput -> modelMapper.map(customWorkoutDrillInput, CustomWorkoutDrill.class))
                         .toList())
                 .build();
 
@@ -61,8 +59,14 @@ public class WorkoutService {
         return workoutEntity;
     }
     private static void updateBaseDefaultFields(WorkoutEntity workoutEntity) {
-        workoutEntity.setLastUpdatedBy(WorkoutUtils.getUserName());
-        workoutEntity.setLastUpdatedDate(WorkoutUtils.getCurrentSqlTime());
+        String userName = WorkoutUtils.getUserName();
+        String time = WorkoutUtils.getCurrentSqlTime().toString();
+        workoutEntity.setLastUpdatedBy(userName);
+        workoutEntity.setLastUpdatedDate(time);
+        if (workoutEntity.getCreationDate() != null) {
+            workoutEntity.setCreatedBy(userName);
+            workoutEntity.setCreationDate(time);
+        }
     }
 }
 

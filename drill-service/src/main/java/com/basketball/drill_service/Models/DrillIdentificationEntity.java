@@ -1,22 +1,19 @@
 package com.basketball.drill_service.Models;
 
+import com.basketball.codegen_service.codegen.types.DatabaseDefaultFields;
 import com.basketball.codegen_service.codegen.types.DrillDifficulty;
 import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.codegen_service.codegen.types.ShotsTaken;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "DRILL_IDENTIFICATION")

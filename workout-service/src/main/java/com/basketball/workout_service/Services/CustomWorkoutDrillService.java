@@ -4,8 +4,8 @@ import com.basketball.codegen_service.codegen.types.CustomWorkoutDrill;
 import com.basketball.codegen_service.codegen.types.CustomWorkoutDrillInput;
 import com.basketball.workout_service.Models.CustomWorkoutDrillEntity;
 import com.basketball.workout_service.Repositories.CustomWorkoutDrillRepository;
-import com.basketball.workout_service.Utils.CustomWorkoutDrillMapper;
 import com.basketball.workout_service.Utils.WorkoutUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +19,16 @@ public class CustomWorkoutDrillService {
     CustomWorkoutDrillRepository customWorkoutDrillRepository;
 
     @Autowired
-    CustomWorkoutDrillMapper customWorkoutDrillMapper;
+    ModelMapper modelMapper;
 
     public List<CustomWorkoutDrill> getAllCustomWorkoutDrills() {
-        return customWorkoutDrillRepository.findAllByIsActiveTrue().stream()
-                .map(customWorkoutDrillMapper::toDto)
+        return customWorkoutDrillRepository.findAll().stream()
+                .map(customWorkoutDrillEntity -> modelMapper.map(customWorkoutDrillEntity, CustomWorkoutDrill.class))
                 .toList();
     }
 
     public CustomWorkoutDrill createCustomWorkoutDrill(CustomWorkoutDrillInput customWorkoutDrillInput) {
-        Boolean drillAlreadyExists = customWorkoutDrillRepository.existsByCategoriesInAndAndDrillTypeAndDrillDifficultyAndIsActiveTrue(
+        Boolean drillAlreadyExists = customWorkoutDrillRepository.existsByCategoriesInAndAndDrillTypeAndDrillDifficulty(
                 customWorkoutDrillInput.getCategories(), customWorkoutDrillInput.getDrillType(), customWorkoutDrillInput.getDrillDifficulty());
         if (drillAlreadyExists) {
             return null;
@@ -41,17 +41,20 @@ public class CustomWorkoutDrillService {
                 .categories(customWorkoutDrillInput.getCategories())
                 .tags(customWorkoutDrillInput.getTags())
                 .description(customWorkoutDrillInput.getDescription())
-                .isActive(true)
-                .createdBy(WorkoutUtils.getUserName())
-                .creationDate(WorkoutUtils.getCurrentSqlTime())
                 .build();
         updateBaseDefaultFields(customWorkoutDrillEntity);
 
-        return customWorkoutDrillMapper.toDto(customWorkoutDrillRepository.save(customWorkoutDrillEntity));
+        return modelMapper.map(customWorkoutDrillRepository.save(customWorkoutDrillEntity), CustomWorkoutDrill.class);
     }
 
     private static void updateBaseDefaultFields(CustomWorkoutDrillEntity customWorkoutDrillEntity) {
-        customWorkoutDrillEntity.setLastUpdatedBy(WorkoutUtils.getUserName());
-        customWorkoutDrillEntity.setLastUpdatedDate(WorkoutUtils.getCurrentSqlTime());
+        String userName = WorkoutUtils.getUserName();
+        String time = WorkoutUtils.getCurrentSqlTime().toString();
+        customWorkoutDrillEntity.setLastUpdatedBy(userName);
+        customWorkoutDrillEntity.setLastUpdatedDate(time);
+        if (customWorkoutDrillEntity.getCreationDate() != null) {
+            customWorkoutDrillEntity.setCreatedBy(userName);
+            customWorkoutDrillEntity.setCreationDate(time);
+        }
     }
 }

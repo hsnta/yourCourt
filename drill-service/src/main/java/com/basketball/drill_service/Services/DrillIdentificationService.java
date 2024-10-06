@@ -1,10 +1,11 @@
 package com.basketball.drill_service.Services;
 
-import com.basketball.codegen_service.codegen.types.*;
+import com.basketball.codegen_service.codegen.types.DrillIdentification;
+import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.drill_service.Models.DrillIdentificationEntity;
 import com.basketball.drill_service.Repositories.DrillIdentificationRepository;
-import com.basketball.drill_service.Utils.DrillIdentificationMapper;
 import com.basketball.drill_service.Utils.DrillUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,30 +18,28 @@ public class DrillIdentificationService {
     DrillIdentificationRepository drillIdentificationRepository;
 
     @Autowired
-    DrillIdentificationMapper drillIdentificationMapper;
+    ModelMapper modelMapper;
 
     public DrillIdentification getDrillIdentificationByDrillType(DrillType drillType) {
-        return drillIdentificationMapper.toDto(drillIdentificationRepository.findByDrillTypeAndIsActiveTrue(drillType));
+        return modelMapper.map(drillIdentificationRepository.findByDrillType(drillType).orElseThrow(), DrillIdentification.class);
     }
 
     public DrillIdentification createDrillIdentification(DrillIdentification drillIdentification) {
-        DrillIdentificationEntity existingEntity = drillIdentificationRepository.findByDrillTypeAndIsActiveTrue(drillIdentification.getDrillType());
-        if (existingEntity == null) {
-            DrillIdentificationEntity drillIdentificationEntity = drillIdentificationMapper.toEntity(drillIdentification);
-            drillIdentificationEntity.setDrillIdentificationId("" + UUID.randomUUID());
-            drillIdentificationEntity.setIsActive(true);
-            drillIdentificationEntity.setCreatedBy(DrillUtils.getUserName());
-            drillIdentificationEntity.setCreationDate(DrillUtils.getCurrentSqlTime());
+        DrillIdentificationEntity drillIdentificationEntity = modelMapper.map(drillIdentification, DrillIdentificationEntity.class);
+        drillIdentificationEntity.setDrillIdentificationId("" + UUID.randomUUID());
+        updateBaseDefaultFields(drillIdentificationEntity);
+        return modelMapper.map(drillIdentificationRepository.save(drillIdentificationEntity), DrillIdentification.class);
 
-            updateBaseDefaultFields(drillIdentificationEntity);
-            return drillIdentificationMapper.toDto(drillIdentificationRepository.save(drillIdentificationEntity));
-        } else {
-            return drillIdentificationMapper.toDto(existingEntity);
-        }
     }
 
     private static void updateBaseDefaultFields(DrillIdentificationEntity drillIdentificationEntity) {
-        drillIdentificationEntity.setLastUpdatedBy(DrillUtils.getUserName());
-        drillIdentificationEntity.setLastUpdatedDate(DrillUtils.getCurrentSqlTime());
+        String userName = DrillUtils.getUserName();
+        String time = DrillUtils.getCurrentSqlTime().toString();
+        drillIdentificationEntity.setLastUpdatedBy(userName);
+        drillIdentificationEntity.setLastUpdatedDate(time);
+        if (drillIdentificationEntity.getCreationDate() != null) {
+            drillIdentificationEntity.setCreatedBy(userName);
+            drillIdentificationEntity.setCreationDate(time);
+        }
     }
 }

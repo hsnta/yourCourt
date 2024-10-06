@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface CustomWorkoutDrillRepository extends MongoRepository<CustomWorkoutDrillEntity, String> {
 
-    List<CustomWorkoutDrillEntity> findAllByIsActiveTrue();
-
-    Boolean existsByCategoriesInAndAndDrillTypeAndDrillDifficultyAndIsActiveTrue(List<WorkoutType> categories,
+    Boolean existsByCategoriesInAndAndDrillTypeAndDrillDifficulty(List<WorkoutType> categories,
                                                                               DrillType drillType, DrillDifficulty drillDifficulty);
 }

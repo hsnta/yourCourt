@@ -271,3 +271,15 @@ enum Tags {
     LADDER
     CONE
 }
+
+type DatabaseDefaultFields {
+    lastUpdatedDate: String
+    creationDate: String
+    lastUpdatedBy: String
+    createdBy: String
+}
+
+type Video {
+    videoId: String
+    videoUrl: String
+}
