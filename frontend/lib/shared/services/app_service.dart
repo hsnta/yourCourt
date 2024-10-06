@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/models/login_data.dart';
@@ -12,9 +14,7 @@ class AppService extends ChangeNotifier {
   String? _loggedInUser;
   String? get getLoggedInUser => _loggedInUser;
   final SecureStorageService _secureStorageService;
-  bool _refreshMode = false;
   late Dio dio;
-  late Dio protectedEndpointsDio;
   late GraphQLClient graphQLClient;
 
   AppService(this._secureStorageService) {
@@ -31,64 +31,66 @@ class AppService extends ChangeNotifier {
         cache: GraphQLCache());
   }
 
-  void login(LoginData loginData) {
+  Future<void> login(LoginData loginData) {
     const String path = "/auth/login";
-    dio
+    return dio
         .post(path, data: loginData.toJson())
-        .then((resp) => _onLoginOrRegisterSuccess(resp))
-        .onError();
+        .then((resp) => _onLoginOrRegisterSuccess(resp));
   }
 
-  void register(RegistrationData registrationData) {
+  Future<void> register(RegistrationData registrationData) {
     const String path = "/auth/register";
-    dio
+    return dio
         .post(path, data: registrationData.toJson())
-        .then((resp) => _onLoginOrRegisterSuccess(resp))
-        .onError();
+        .then((resp) => _onLoginOrRegisterSuccess(resp));
   }
 
   void _onLoginOrRegisterSuccess(var resp) {
-    _secureStorageService.storeAuthData(tokenResponseFromJson(resp.toString()));
     _secureStorageService
-        .getUsernameFromToken()
-        .then((val) => _loggedInUser = val);
-    notifyListeners();
+        .storeAuthData(tokenResponseFromJson(resp.toString()))
+        .then((voidVal) {
+      _secureStorageService.getUsernameFromToken().then((val) {
+        _loggedInUser = val;
+        notifyListeners();
+      });
+    });
   }
 
-  Future<String?> _getToken() async {
-    if (_refreshMode)
-      return null; // This flag is needed to avoid infinite loop(refresh endpoint calls itself)
+  FutureOr<String?> _getToken() {
+    _secureStorageService.getAuthData().then((authData) {
+      final aT = authData.accessToken;
+      final rT = authData.refreshToken;
 
-    final authData = await _secureStorageService.getAuthData();
-
-    final aT = authData.accessToken;
-    final rT = authData.refreshToken;
-
-    if (aT == "" || rT == "") return null;
-
-    if (Jwt.isExpired(aT)) {
-      final TokenResponse tokens = await _refreshToken(rT);
-
-      if (tokens == null) return null;
-
-      await _secureStorageService.updateAccessToken(tokens.accessToken);
-
-      return 'Bearer ${tokens.accessToken}';
-    }
-
-    return 'Bearer $aT';
+      if (aT == "" || rT == "") {
+        return Future.error("No auth token");
+      }
+      if (Jwt.isExpired(aT)) {
+        return _refreshToken(rT).then((tokens) {
+          // if (tokens.accessToken == "") return null;
+          return _secureStorageService
+              .updateAccessToken(tokens.accessToken)
+              .then((val) => 'Bearer ${tokens.accessToken}');
+        });
+      }
+      return 'Bearer $aT';
+    });
   }
 
   Future<TokenResponse> _refreshToken(String refreshToken) async {
-    _refreshMode = true;
-    // refresh request
+    const String path = "/auth/refresh";
 
-    _refreshMode = false;
+    // refresh request
+    return dio
+        .post(path,
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $refreshToken',
+              },
+            ))
+        .then((resp) => tokenResponseFromJson(resp.toString()));
   }
 
   void logout() {}
 
   void changeUserAuthInfo() {}
 }
-
-class RefreshTokenInterceptor {}

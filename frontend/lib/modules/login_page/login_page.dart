@@ -1,5 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/shared/components/error_snackbar.dart';
+import 'package:frontend/shared/models/login_data.dart';
+import 'package:frontend/shared/models/registration_data.dart';
+import 'package:frontend/shared/services/app_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,9 +51,34 @@ class LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  void login() {}
+  void login(BuildContext context) {
+    var appService = Provider.of<AppService>(context);
+    appService
+        .login(LoginData(
+            username: _userNameController.text,
+            password: _passwordController.text))
+        .catchError((e) {
+      if (context.mounted) {
+        ErrorSnackbar.show(context, e.toString());
+      }
+    });
+  }
 
-  void register() {}
+  void register(BuildContext context) {
+    var appService = Provider.of<AppService>(context);
+    appService
+        .register(RegistrationData(
+            username: _userNameController.text,
+            password: _passwordController.text,
+            email: _emailController.text,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text))
+        .catchError((e) {
+      if (context.mounted) {
+        ErrorSnackbar.show(context, e.toString());
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,16 +138,14 @@ class LoginPageState extends State<LoginPage> {
             child: ElevatedButton(
               onPressed: () {
                 if (_loginFormKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
                   if (registrationMode) {
-                    register();
+                    register(context);
                     return;
                   }
-                  login();
+                  login(context);
                 }
               },
               child: Text(registrationMode ? 'Register' : 'Login'),

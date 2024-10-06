@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/modules/login_page/login_page.dart';
+import 'package:frontend/shared/services/app_service.dart';
+import 'package:provider/provider.dart';
 import '../../modules/page_manager.dart';
 import 'components/button.dart';
 
@@ -12,7 +14,6 @@ class BottomNavigation extends StatefulWidget {
 
 class BottomNavigationState extends State<BottomNavigation> {
   int currentPage = 2;
-  bool loggedInUser = false;
 
   final List<BottomNavigationBarItemData> bottomNavigationBarItems = [
     BottomNavigationBarItemData(Icons.note_add, 0),
@@ -24,8 +25,10 @@ class BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return loggedInUser
-        ? Scaffold(
+    var appService = Provider.of<AppService>(context);
+    return appService.getLoggedInUser == ""
+        ? const Scaffold(body: LoginPage())
+        : Scaffold(
             body: getCurrentPage(currentPage),
             bottomNavigationBar: BottomAppBar(
               child: Row(
@@ -44,9 +47,6 @@ class BottomNavigationState extends State<BottomNavigation> {
                 ],
               ),
             ),
-          )
-        : const Scaffold(
-            body: LoginPage(),
           );
   }
 
