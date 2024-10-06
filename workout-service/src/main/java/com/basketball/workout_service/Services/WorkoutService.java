@@ -5,6 +5,7 @@ import com.basketball.codegen_service.codegen.types.WorkoutType;
 import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
 import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
+import com.basketball.workout_service.Utils.CustomWorkoutDrillMapper;
 import com.basketball.workout_service.Utils.WorkoutUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class WorkoutService {
 
     @Autowired
     KafkaProducerWorkoutService kafkaProducerWorkoutService;
+
+    @Autowired
+    CustomWorkoutDrillMapper customWorkoutDrillMapper;
 
     public WorkoutEntity getWorkoutById(String workoutId) {
         return workoutRepository.findById(workoutId).orElseThrow();
@@ -47,7 +51,9 @@ public class WorkoutService {
         DrillCreationRequest drillCreationRequest = DrillCreationRequest.newBuilder()
                 .workoutId(workoutEntity.getWorkoutId())
                 .userId(workoutEntity.getUserId())
-                .drillTypes(customWorkoutDrillsRequest.getDrillTypes())
+                .customWorkoutDrills(customWorkoutDrillsRequest.getCustomWorkoutDrills().stream()
+                        .map(customWorkoutDrillMapper::toCustomDrillFromInput)
+                        .toList())
                 .build();
 
         workoutRepository.save(workoutEntity);

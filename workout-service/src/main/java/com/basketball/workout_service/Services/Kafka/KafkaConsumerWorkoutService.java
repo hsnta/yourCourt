@@ -24,4 +24,9 @@ public class KafkaConsumerWorkoutService {
     public void consumeUserPerformanceService(String message) {
         messageProcessorWorkoutService.getMessage(message);
     }
+
+    @KafkaListener(topics = "ai_recommendation_service_topic", groupId = "group_id")
+    public void sendUiMessage(String message) {
+        messageProcessorWorkoutService.getMessage(message);
+    }
 }
