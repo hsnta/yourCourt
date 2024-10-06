@@ -21,10 +21,6 @@ public class VideoService {
     @Autowired
     ModelMapper modelMapper;
 
-    public Video getVideoByDrillType(DrillType drillType) {
-        return modelMapper.map(videoRepository.findByDrillType(drillType).orElseThrow(), Video.class);
-    }
-
     public Video createVideo(Video video) {
         VideoEntity videoEntity = modelMapper.map(video, VideoEntity.class);
         videoEntity.setVideoId(VideoUtils.createUniqueVideoId());

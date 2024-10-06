@@ -2,9 +2,6 @@ package com.basketball.video_service.Controllers;
 
 import com.basketball.codegen_service.codegen.types.DrillType;
 import com.basketball.video_service.Services.TokenService;
-import com.basketball.video_service.Services.VideoService;
-import com.basketball.video_service.Services.Kafka.KafkaProducerVideoService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

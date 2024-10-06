@@ -11,5 +11,4 @@ import java.util.Optional;
 
 public interface VideoRepository extends MongoRepository<VideoEntity, String> {
 
-    Optional<VideoEntity> findByDrillType(DrillType drillType);
 }
