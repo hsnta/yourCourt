@@ -52,7 +52,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void login(BuildContext context) {
-    var appService = Provider.of<AppService>(context);
+    var appService = Provider.of<AppService>(context, listen: false);
     appService
         .login(LoginData(
             username: _userNameController.text,
@@ -65,7 +65,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void register(BuildContext context) {
-    var appService = Provider.of<AppService>(context);
+    var appService = Provider.of<AppService>(context, listen: false);
     appService
         .register(RegistrationData(
             username: _userNameController.text,
@@ -138,9 +138,9 @@ class LoginPageState extends State<LoginPage> {
             child: ElevatedButton(
               onPressed: () {
                 if (_loginFormKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   const SnackBar(content: Text('Processing Data')),
+                  // );
                   if (registrationMode) {
                     register(context);
                     return;
@@ -176,6 +176,7 @@ class TextFieldWithPadding extends StatelessWidget {
         padding: EdgeInsets.only(
             left: 8, right: 8, top: applyVerticalPadding ? 16 : 0),
         child: TextFormField(
+          controller: controller,
           validator: valdator,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),

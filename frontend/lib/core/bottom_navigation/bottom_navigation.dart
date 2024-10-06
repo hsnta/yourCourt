@@ -26,7 +26,8 @@ class BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     var appService = Provider.of<AppService>(context);
-    return appService.getLoggedInUser == ""
+    return appService.getLoggedInUser == null ||
+            appService.getLoggedInUser == ""
         ? const Scaffold(body: LoginPage())
         : Scaffold(
             body: getCurrentPage(currentPage),

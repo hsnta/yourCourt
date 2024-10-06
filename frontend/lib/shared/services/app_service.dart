@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,26 @@ class AppService extends ChangeNotifier {
   Future<void> login(LoginData loginData) {
     const String path = "/auth/login";
     return dio
-        .post(path, data: loginData.toJson())
+        .post(
+          path,
+          data: loginData.toJson(),
+          options: Options(headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+          }),
+        )
         .then((resp) => _onLoginOrRegisterSuccess(resp));
   }
 
   Future<void> register(RegistrationData registrationData) {
     const String path = "/auth/register";
     return dio
-        .post(path, data: registrationData.toJson())
+        .post(
+          path,
+          data: registrationData.toJson(),
+          options: Options(headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+          }),
+        )
         .then((resp) => _onLoginOrRegisterSuccess(resp));
   }
 
@@ -57,7 +70,7 @@ class AppService extends ChangeNotifier {
   }
 
   FutureOr<String?> _getToken() {
-    _secureStorageService.getAuthData().then((authData) {
+    return _secureStorageService.getAuthData().then((authData) {
       final aT = authData.accessToken;
       final rT = authData.refreshToken;
 
@@ -66,13 +79,15 @@ class AppService extends ChangeNotifier {
       }
       if (Jwt.isExpired(aT)) {
         return _refreshToken(rT).then((tokens) {
-          // if (tokens.accessToken == "") return null;
+          if (tokens.accessToken == "") {
+            return Future.error("No auth token");
+          }
           return _secureStorageService
               .updateAccessToken(tokens.accessToken)
               .then((val) => 'Bearer ${tokens.accessToken}');
         });
       }
-      return 'Bearer $aT';
+      return Future.value('Bearer $aT');
     });
   }
 
@@ -90,7 +105,24 @@ class AppService extends ChangeNotifier {
         .then((resp) => tokenResponseFromJson(resp.toString()));
   }
 
-  void logout() {}
+  void logout() async {
+    const String path = "/auth/logout";
+    final String? token = await _getToken();
+    if (token == null) {
+      return;
+    }
+    dio
+        .post(path,
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ))
+        .then((resp) {
+      _loggedInUser = "";
+      _secureStorageService.clearAuthData();
+    });
+  }
 
   void changeUserAuthInfo() {}
 }
