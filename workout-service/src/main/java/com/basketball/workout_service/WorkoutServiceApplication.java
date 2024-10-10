@@ -12,9 +12,4 @@ public class WorkoutServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(WorkoutServiceApplication.class, args);
     }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

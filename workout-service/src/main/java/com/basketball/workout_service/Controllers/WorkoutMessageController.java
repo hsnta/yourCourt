@@ -12,6 +12,6 @@ public class WorkoutMessageController {
     private KafkaProducerWorkoutService kafkaProducerWorkoutService;
 
     public void sendMessage(@RequestBody String workoutId) {
-        kafkaProducerWorkoutService.sendMessage(workoutId);
+        kafkaProducerWorkoutService.sendMessageToUI(workoutId);
     }
 }

@@ -1,11 +1,11 @@
 package com.basketball.user_performance.Services;
 
+import com.basketball.codegen_service.codegen.types.UserPerformance;
 import com.basketball.user_performance.Exceptions.UserPerformanceNotFoundException;
 import com.basketball.user_performance.Models.UserPerformanceEntity;
 import com.basketball.user_performance.Repositories.UserPerformanceRepository;
-import com.basketball.user_performance.Utils.UserPerformanceMapper;
 import com.basketball.user_performance.Utils.UserPerformanceUtils;
-import com.basketball.workout_service.codegen.types.UserPerformance;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,31 +19,29 @@ public class UserPerformanceService {
     private UserPerformanceRepository userPerformanceRepository;
 
     @Autowired
-    private UserPerformanceMapper userPerformanceMapper;
+    private ModelMapper modelMapper;
 
     public UserPerformance getUserPerformanceByUserId(String userId) {
-        return userPerformanceMapper.toDto(userPerformanceRepository.findByUserId(userId).orElseThrow(() ->
-                new UserPerformanceNotFoundException("User performance not found for user ID: " + userId)));
+        return modelMapper.map((userPerformanceRepository.findByUserId(userId).orElseThrow(() ->
+                new UserPerformanceNotFoundException("User performance not found for user ID: " + userId))), UserPerformance.class);
     }
 
     public UserPerformance getUserPerformanceById(String id) {
-        return userPerformanceMapper.toDto(userPerformanceRepository.findById(id).orElseThrow(() ->
-                new UserPerformanceNotFoundException("User performance not found for ID: " + id)));
+        return modelMapper.map((userPerformanceRepository.findById(id).orElseThrow(() ->
+                new UserPerformanceNotFoundException("User performance not found for ID: " + id))), UserPerformance.class);
     }
 
     public List<UserPerformance> getAllUserPerformance() {
         return userPerformanceRepository.findAll().stream()
-                .map(userPerformanceMapper::toDto)
+                .map(userPerformanceEntity -> modelMapper.map(userPerformanceEntity, UserPerformance.class))
                 .collect(Collectors.toList());
     }
 
     public UserPerformance createUserPerformance(UserPerformance userPerformance) {
-        UserPerformanceEntity userPerformanceEntity = userPerformanceMapper.toEntity(userPerformance);
+        UserPerformanceEntity userPerformanceEntity = modelMapper.map(userPerformance, UserPerformanceEntity.class);
         userPerformanceEntity.setUserId(UserPerformanceUtils.createUniqueUserPerformanceId());
-        userPerformanceEntity.setCreatedBy(UserPerformanceUtils.getUserName());
-        userPerformanceEntity.setCreationDate(UserPerformanceUtils.getCurrentSqlTime());
         updateBaseDefaultFields(userPerformanceEntity);
-        return userPerformanceMapper.toDto(userPerformanceRepository.save(userPerformanceEntity));
+        return modelMapper.map((userPerformanceRepository.save(userPerformanceEntity)), UserPerformance.class);
     }
 
     public UserPerformance updateUserPerformance(UserPerformance userPerformance) {
@@ -51,18 +49,23 @@ public class UserPerformanceService {
                 .orElseThrow(() -> new UserPerformanceNotFoundException("User performance not found for ID: "
                         + userPerformance.getUserPerformanceId()));
         updateBaseDefaultFields(userPerformanceEntity);
-        return userPerformanceMapper.toDto(userPerformanceRepository.save(userPerformanceEntity));
+        return modelMapper.map((userPerformanceRepository.save(userPerformanceEntity)), UserPerformance.class);
     }
 
     public Boolean deleteUserPerformance(String userPerformanceId) {
-        userPerformanceRepository.findById(userPerformanceId).orElseThrow(() ->
-                        new UserPerformanceNotFoundException("User performance not found for ID: " + userPerformanceId))
-                .setIsActive(false);
+        userPerformanceRepository.delete(userPerformanceRepository.findById(userPerformanceId).orElseThrow(() ->
+                new UserPerformanceNotFoundException("User performance not found for ID: " + userPerformanceId)));
         return true;
     }
 
     private static void updateBaseDefaultFields(UserPerformanceEntity userEntity) {
-        userEntity.setLastUpdatedBy(UserPerformanceUtils.getUserName());
-        userEntity.setLastUpdatedDate(UserPerformanceUtils.getCurrentSqlTime());
+        String userName = UserPerformanceUtils.getUserName();
+        String time = UserPerformanceUtils.getCurrentSqlTime().toString();
+        userEntity.setLastUpdatedBy(userName);
+        userEntity.setLastUpdatedDate(time);
+        if (userEntity.getCreationDate() != null) {
+            userEntity.setCreatedBy(userName);
+            userEntity.setCreationDate(time);
+        }
     }
 }

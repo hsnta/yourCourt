@@ -1,0 +1,5 @@
+FROM openjdk:17
+
+WORKDIR /user-performance
+COPY target/user-performance-0.0.1-SNAPSHOT.jar .
+ENTRYPOINT ["java", "-jar", "user-performance-0.0.1-SNAPSHOT.jar"]

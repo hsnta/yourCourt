@@ -1,9 +1,9 @@
 package com.basketball.user_service.Controllers;
 
+import com.basketball.codegen_service.codegen.types.User;
 import com.basketball.user_service.Exceptions.UserNotFoundException;
 import com.basketball.user_service.Services.Kafka.KafkaProducerUserService;
 import com.basketball.user_service.Services.UserService;
-import com.basketball.user_service.codegen.types.User;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;

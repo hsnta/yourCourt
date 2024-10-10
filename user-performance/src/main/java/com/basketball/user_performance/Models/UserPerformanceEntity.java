@@ -1,20 +1,17 @@
 package com.basketball.user_performance.Models;
 
+import com.basketball.codegen_service.codegen.types.DatabaseDefaultFields;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.List;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(value = "USER_PERFORMANCE")
-public class UserPerformanceEntity extends DatabaseDefaultFields{
+public class UserPerformanceEntity extends DatabaseDefaultFields {
 
     @Id
     private String userPerformanceId;

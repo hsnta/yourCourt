@@ -1,0 +1,5 @@
+FROM openjdk:17
+
+WORKDIR /video-service
+COPY target/video-service-0.0.1-SNAPSHOT.jar .
+ENTRYPOINT ["java", "-jar", "video-service-0.0.1-SNAPSHOT.jar"]

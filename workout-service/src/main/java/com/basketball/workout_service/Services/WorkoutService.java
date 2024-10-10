@@ -1,16 +1,16 @@
 package com.basketball.workout_service.Services;
 
-import com.basketball.workout_service.Exceptions.WorkoutNotFoundException;
+import com.basketball.codegen_service.codegen.types.*;
+import com.basketball.codegen_service.codegen.types.WorkoutType;
 import com.basketball.workout_service.Models.*;
 import com.basketball.workout_service.Repositories.WorkoutRepository;
-import com.basketball.workout_service.Repositories.WorkoutSelectionRepository;
+import com.basketball.workout_service.Services.Kafka.KafkaProducerWorkoutService;
 import com.basketball.workout_service.Utils.WorkoutUtils;
-import com.basketball.workout_service.codegen.types.WorkoutSelection;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class WorkoutService {
@@ -19,72 +19,55 @@ public class WorkoutService {
     WorkoutRepository workoutRepository;
 
     @Autowired
-    WorkoutSelectionRepository workoutSelectionRepository;
+    KafkaProducerWorkoutService kafkaProducerWorkoutService;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     public WorkoutEntity getWorkoutById(String workoutId) {
         return workoutRepository.findById(workoutId).orElseThrow();
     }
 
-    public List<WorkoutEntity> getAllWorkoutByUserId(String workoutId) {
-        return workoutRepository.findAllByUserId(workoutId);
+    public List<WorkoutEntity> getAllWorkoutsByUserId(String userId) {
+        return workoutRepository.findAllByUserId(userId);
     }
 
-    public List<WorkoutSelectionEntity> getAllWorkoutSelection() {
-        return workoutSelectionRepository.findAll();
+    public List<WorkoutEntity> getAllWorkouts() {
+        return workoutRepository.findAll();
     }
 
-    public WorkoutSelectionEntity createWorkoutSelection(WorkoutSelection workoutSelection) {
-        WorkoutSelectionEntity workoutSelectionEntity = WorkoutSelectionEntity.builder()
-                .workoutId(WorkoutUtils.createUniqueWorkoutSelectionId())
-                .workoutType(workoutSelection.getWorkoutType())
-                .drills(workoutSelection.getDrills())
-                .createdBy(WorkoutUtils.getUserName())
-                .lastUpdatedBy(WorkoutUtils.getUserName())
-                .lastUpdatedDate(WorkoutUtils.getCurrentSqlTime())
-                .creationDate(WorkoutUtils.getCurrentSqlTime())
+    public WorkoutEntity createWorkoutByCustomWorkoutDrills(CustomWorkoutDrillsRequest customWorkoutDrillsRequest) {
+        WorkoutEntity workoutEntity = WorkoutEntity.builder()
+                .workoutId(WorkoutUtils.createUniqueWorkoutId())
+                .userId(customWorkoutDrillsRequest.getUserId())
+                .name(customWorkoutDrillsRequest.getWorkoutName())
+                .workoutType(WorkoutType.CUSTOM_WORKOUT)
+                .status("CREATED")
                 .build();
-        workoutSelectionEntity.getDrills().forEach(drillModel -> drillModel.setDrillId("" + UUID.randomUUID()));
+        updateBaseDefaultFields(workoutEntity);
 
-        return workoutSelectionRepository.save(workoutSelectionEntity);
+        DrillCreationRequest drillCreationRequest = DrillCreationRequest.newBuilder()
+                .workoutId(workoutEntity.getWorkoutId())
+                .userId(workoutEntity.getUserId())
+                .customWorkoutDrills(customWorkoutDrillsRequest.getCustomWorkoutDrills().stream()
+                        .map(customWorkoutDrillInput -> modelMapper.map(customWorkoutDrillInput, CustomWorkoutDrill.class))
+                        .toList())
+                .build();
+
+        workoutRepository.save(workoutEntity);
+        kafkaProducerWorkoutService.sendDrillsToDrillService(drillCreationRequest);
+        return workoutEntity;
     }
-
-    public WorkoutSelectionEntity createDrillForWorkoutSelection(WorkoutSelection workoutUpdateDrill) {
-        WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutUpdateDrill.getWorkoutId())
-                .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
-                        workoutUpdateDrill.getWorkoutId()));
-        List<com.basketball.workout_service.codegen.types.DrillModel> drills = workoutUpdateDrill.getDrills();
-        drills.forEach(createDrill -> {
-            boolean anyMatch = workoutSelection.getDrills().stream().anyMatch(existingDrill -> existingDrill.getDrillType()
-                    .equals(createDrill.getDrillType()));
-            if (!anyMatch) {
-                createDrill.setDrillId("" + UUID.randomUUID());
-                workoutSelection.getDrills().add(createDrill);
-            }
-        });
-        return workoutSelectionRepository.save(workoutSelection);
-    }
-
-    public WorkoutSelectionEntity updateDrillTypeInWorkoutSelection(WorkoutSelection workoutSelectionModel) {
-        WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutSelectionModel.getWorkoutId())
-                .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
-                        workoutSelectionModel.getWorkoutId()));
-        List<com.basketball.workout_service.codegen.types.DrillModel> drills = workoutSelectionModel.getDrills();
-        workoutSelection.getDrills().forEach(existingDrill -> {
-            drills.forEach(updateDrill -> {
-                if (existingDrill.getDrillId().equals(updateDrill.getDrillId())) {
-                    existingDrill.setDrillType(updateDrill.getDrillType());
-                }
-            });
-        });
-        workoutSelection.setDrills(workoutSelection.getDrills());
-        return workoutSelectionRepository.save(workoutSelection);
-    }
-
-    public WorkoutSelectionEntity updateWorkoutSelection(WorkoutSelection workoutSelectionModel) {
-        WorkoutSelectionEntity workoutSelection = workoutSelectionRepository.findById(workoutSelectionModel.getWorkoutId())
-                .orElseThrow(() -> new WorkoutNotFoundException("Workout selection not found for ID: " +
-                        workoutSelectionModel.getWorkoutId()));
-        workoutSelection.setDrills(workoutSelection.getDrills());
-        return workoutSelectionRepository.save(workoutSelection);
+    private static void updateBaseDefaultFields(WorkoutEntity workoutEntity) {
+        String userName = WorkoutUtils.getUserName();
+        String time = WorkoutUtils.getCurrentSqlTime().toString();
+        workoutEntity.setLastUpdatedBy(userName);
+        workoutEntity.setLastUpdatedDate(time);
+        if (workoutEntity.getCreationDate() != null) {
+            workoutEntity.setCreatedBy(userName);
+            workoutEntity.setCreationDate(time);
+        }
     }
 }
+
+

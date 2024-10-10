@@ -1,24 +1,27 @@
 package com.basketball.workout_service.Models;
 
+import com.basketball.codegen_service.codegen.types.DatabaseDefaultFields;
+import com.basketball.codegen_service.codegen.types.WorkoutType;
 import jakarta.persistence.Id;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "WORKOUT")
 public class WorkoutEntity extends DatabaseDefaultFields {
 
     @Id
-    private Long workoutId;
-    private Long userId;
+    private String workoutId;
+    private String userId;
     private String name;
-    private List<WorkoutType> categories;
+    private WorkoutType workoutType;
     private Date completionTime;
     private String status;
 }
