@@ -1,0 +1,34 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Kingdom HOOPER",
+      "profilePic": "assets/images/dashboard_background.png"
+    },
+    {
+      "id": 2,
+      "name": "Micheal Jordan",
+      "profilePic": "assets/images/dashboard_background.png"
+    },
+    {
+      "id": 3,
+      "name": "Kobe Bryant",
+      "profilePic": "assets/images/dashboard_background.png"
+    },
+    {
+      "id": 4,
+      "name": "Trailblazer Dude",
+      "profilePic": "assets/images/dashboard_background.png"
+    },
+    {
+      "id": 5,
+      "name": "Jane Smith",
+      "profilePic": "assets/images/dashboard_background.png"
+    },
+    {
+      "id": 6,
+      "name": "Coach Alec",
+      "profilePic": "assets/images/dashboard_background.png"
+    }
+  ]
+}
