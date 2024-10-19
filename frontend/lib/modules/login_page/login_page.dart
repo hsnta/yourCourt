@@ -16,6 +16,8 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   bool registrationMode = false;
+  bool passwordVisible = false;
+  bool repeatPasswordVisible = false;
   final _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -96,8 +98,11 @@ class LoginPageState extends State<LoginPage> {
           TextFieldWithPadding(
               controller: _passwordController,
               valdator: _passwordValidator,
+              textVisible: passwordVisible,
               hint: "Password",
-              applyVerticalPadding: true),
+              applyVerticalPadding: true,
+              changeVisibility: () =>
+                  setState(() => passwordVisible = !passwordVisible)),
           if (registrationMode) ...[
             TextFieldWithPadding(
                 controller: _emailController,
@@ -162,13 +167,17 @@ class TextFieldWithPadding extends StatelessWidget {
   final FormFieldValidator<String>? valdator;
   final String? hint;
   final bool applyVerticalPadding;
+  final bool textVisible;
+  final VoidCallback? changeVisibility;
 
   const TextFieldWithPadding(
       {super.key,
       required this.controller,
       this.valdator,
       this.hint,
-      this.applyVerticalPadding = (false)});
+      this.applyVerticalPadding = (false),
+      this.textVisible = (true),
+      this.changeVisibility});
 
   @override
   Widget build(BuildContext context) {
@@ -176,12 +185,18 @@ class TextFieldWithPadding extends StatelessWidget {
         padding: EdgeInsets.only(
             left: 8, right: 8, top: applyVerticalPadding ? 16 : 0),
         child: TextFormField(
-          controller: controller,
-          validator: valdator,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: hint,
-          ),
-        ));
+            controller: controller,
+            obscureText: !textVisible,
+            validator: valdator,
+            decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: hint,
+                suffixIcon: changeVisibility != null
+                    ? IconButton(
+                        icon: Icon(textVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: changeVisibility)
+                    : null)));
   }
 }

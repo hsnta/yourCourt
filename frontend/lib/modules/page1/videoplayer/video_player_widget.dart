@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/dashboard/components/videoplayer/video_player_widget_state.dart';
+import 'package:frontend/modules/page1/videoplayer/video_player_widget_state.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String url;

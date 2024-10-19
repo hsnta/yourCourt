@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/modules/page3/input_results/court_part_button.dart';
-import 'package:frontend/modules/page3/input_results/model/court_part_model.dart';
+import 'package:frontend/modules/page1/input_results/court_part_button.dart';
+import 'package:frontend/modules/page1/input_results/model/court_part_model.dart';
 import 'court_constants.dart' as court_constants;
 
 class CourtView extends StatefulWidget {

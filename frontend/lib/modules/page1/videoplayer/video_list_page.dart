@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/dashboard/components/videoplayer/video_player_widget.dart';
+import 'package:frontend/modules/page1/videoplayer/video_player_widget.dart';
 
 class VideoListPage extends StatelessWidget {
   final List<Map<String, String>> videos;

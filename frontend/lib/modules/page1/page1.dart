@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../dashboard/components/videoplayer/video_list_page.dart';
+import 'videoplayer/video_list_page.dart';
 
 class Page1 extends StatelessWidget {
   const Page1({Key? key}) : super(key: key);
@@ -33,8 +33,7 @@ class MyHomePage extends StatelessWidget {
       'description': 'Yet another short animated film featuring animals.'
     },
     {
-      'url':
-          'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      'url': 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
       'title': 'LBJ Drill',
       'description': 'Yet another short animated film featuring animals.'
     },

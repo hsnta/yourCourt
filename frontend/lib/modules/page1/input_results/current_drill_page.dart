@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/page3/input_results/court_constants.dart';
+import 'package:frontend/modules/page1/input_results/court_constants.dart';
 
 import 'court_view.dart';
 

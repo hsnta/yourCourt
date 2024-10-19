@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/dashboard/components/videoplayer/video_player_controls.dart';
-import 'package:frontend/modules/dashboard/components/videoplayer/video_player_widget.dart';
+import 'package:frontend/modules/page1/videoplayer/video_player_controls.dart';
+import 'package:frontend/modules/page1/videoplayer/video_player_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
@@ -12,10 +12,11 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.url))
-      ..initialize().then((_) {
-        setState(() {});
-      });
+    _videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.url))
+          ..initialize().then((_) {
+            setState(() {});
+          });
 
     _videoPlayerController.setLooping(true);
 
@@ -28,7 +29,8 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       setState(() {
         _timeRemaining = _videoPlayerController.value.duration -
             _videoPlayerController.value.position;
-        _sliderValue = _videoPlayerController.value.position.inMilliseconds.toDouble();
+        _sliderValue =
+            _videoPlayerController.value.position.inMilliseconds.toDouble();
       });
     });
 

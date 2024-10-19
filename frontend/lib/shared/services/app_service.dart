@@ -11,7 +11,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
 class AppService extends ChangeNotifier {
-  static const String baseUrl = "http://localhost:8070/v1";
+  static const String baseUrl = "http://localhost:8700/v1";
   String? _loggedInUser;
   String? get getLoggedInUser => _loggedInUser;
   final SecureStorageService _secureStorageService;
@@ -47,6 +47,8 @@ class AppService extends ChangeNotifier {
 
   Future<void> register(RegistrationData registrationData) {
     const String path = "/auth/register";
+    final Map<String, dynamic> data = registrationData.toJson();
+    data["roles"] = ["User"];
     return dio
         .post(
           path,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/page3/input_results/court_parts_clipper.dart';
-import 'package:frontend/modules/page3/input_results/shots_counter.dart';
-import 'package:frontend/modules/page3/input_results/shots_input.dart';
+import 'package:frontend/modules/page1/input_results/court_parts_clipper.dart';
+import 'package:frontend/modules/page1/input_results/shots_counter.dart';
+import 'package:frontend/modules/page1/input_results/shots_input.dart';
 
 class CourtPartButton extends StatefulWidget {
   final String partName;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/page3/input_results/model/court_part_model.dart';
+import 'package:frontend/modules/page1/input_results/model/court_part_model.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 final Map<String, String> partToPathMap = {

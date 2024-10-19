@@ -25,7 +25,7 @@ class SecureStorageService {
   Future<String> getUsernameFromToken() async {
     final String? token = await _storage.read(key: "accessToken");
     if (token != null) {
-      return Jwt.parseJwt(token)["subject"];
+      return Jwt.parseJwt(token)["sub"];
     }
     return "";
   }
