@@ -6,7 +6,10 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,5 +34,38 @@ public class GatewayConfig {
                 .route("auth-service", r -> r.path("/v1/auth/**")
                         .uri("lb://AUTH-SERVICE"))
                 .build();
+    }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOrigin("*");  // Allow all origins for testing
+//        configuration.addAllowedMethod("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.setAllowCredentials(false);  // Disable credentials temporarily
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//
+//        return source;
+//    }
+
+    // Cors is only needed for web apps (only for local testing since our app is mobile)
+    @Bean
+    @Profile(value = "local")
+    CorsWebFilter corsFilter() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsWebFilter(source);
     }
 }
