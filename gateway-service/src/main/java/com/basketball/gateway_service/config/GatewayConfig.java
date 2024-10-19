@@ -6,7 +6,6 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -52,7 +51,7 @@ public class GatewayConfig {
 
     // Cors is only needed for web apps (only for local testing since our app is mobile)
     @Bean
-    @Profile(value = "local")
+//    @Profile(value = "local")
     CorsWebFilter corsFilter() {
 
         CorsConfiguration config = new CorsConfiguration();

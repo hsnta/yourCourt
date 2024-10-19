@@ -162,7 +162,6 @@ type User {
     email: String!
     phoneNumber: Int!
     username: String!
-    password: String!
 }
 
 input LoginInput {

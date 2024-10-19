@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter implements GatewayFilter {
         log.info("Requested endpoint: {}", request.getURI().getPath());
         if (!isApiSecured.test(request)) {
             return chain.filter(exchange);
-
         }
         if (authMissing(request)) {
             return onError(exchange);
