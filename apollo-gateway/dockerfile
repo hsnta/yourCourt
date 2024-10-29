@@ -1,0 +1,6 @@
+FROM node
+WORKDIR /apollo-gateway
+COPY package.json /apollo-gateway
+RUN npm install
+COPY . /apollo-gateway
+ENTRYPOINT ["node","index.js"]

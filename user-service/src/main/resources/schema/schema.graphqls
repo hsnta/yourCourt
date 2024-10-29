@@ -1,0 +1,37 @@
+extend type Query {
+
+    getUserById(userId: String!): User
+    getUserByUsername(username: String!): User
+    getUserByEmail(email: String!): User
+    getAllUser: [User]
+}
+
+extend type Mutation {
+
+    createUser(userInput: UserInput!): User
+    updateUser(userInput: UserInput!): User
+    deleteUser(userId: String!): Boolean
+}
+
+type User {
+    userId: String!
+    firstName: String!
+    lastName: String!
+    dateOfBirth: String!
+    email: String!
+    phoneNumber: Int!
+    username: String!
+}
+
+input LoginInput {
+    username: String!
+    password: String!
+}
+
+input UserInput {
+    username: String!
+    email: String!
+    firstName: String
+    lastName: String
+    # Add any other fields relevant to creating/updating a User
+}

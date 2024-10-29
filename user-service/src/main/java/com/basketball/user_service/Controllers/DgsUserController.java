@@ -8,11 +8,12 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-
+@Slf4j
 @DgsComponent
 public class DgsUserController {
 
@@ -64,6 +65,7 @@ public class DgsUserController {
 
     @DgsMutation
     public User createUser(@InputArgument("userInput") User user) {
+        log.info("inside user controller");
         return userService.createUser(user);
     }
 

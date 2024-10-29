@@ -199,6 +199,21 @@ services:
       - "docker_local.env"
     tty: true
 
+  apollo-gateway:
+    build:
+      context: ./apollo-gateway
+    container_name: "apollo-gateway"
+    depends_on:
+      - auth-service
+      - user-performance-service
+      - user-service
+      - drill-service
+      - workout-service
+    ports:
+      - "${APOLLO_GATEWAY_SERVICE_PORT}:${APOLLO_GATEWAY_SERVICE_PORT}"
+    env_file:
+      - "docker_local.env"
+
 volumes:
   mongodb-data-vol:
   pgdata-vol:

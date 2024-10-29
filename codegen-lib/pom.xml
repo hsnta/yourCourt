@@ -83,6 +83,7 @@
 						<configuration>
 							<schemaPaths>
 								<param>src/main/resources/schema</param>
+								<param>../user-service/src/main/resources/schema</param>
 							</schemaPaths>
 							<packageName>com.basketball.codegen_service.codegen</packageName>
 							<addGeneratedAnnotation>true</addGeneratedAnnotation>

@@ -8,10 +8,12 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@Slf4j
 @DgsComponent
 public class DgsUserPerformanceController {
 
@@ -53,6 +55,7 @@ public class DgsUserPerformanceController {
 
     @DgsMutation
     public UserPerformance createUserPerformance(@InputArgument("userPerformanceInput") UserPerformance userPerformance) {
+        log.info("inside user controller");
         return userPerformanceService.createUserPerformance(userPerformance);
     }
 
