@@ -8,7 +8,6 @@ class Recommendations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: YourCourtAppBar(titleText: "Recommendations"),
       body: RecommendationsBody()
     );
   }

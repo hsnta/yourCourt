@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ErrorSnackbar {
-  static void show(BuildContext context, String message) {
+class Snackbar {
+  static void showErrorNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -9,6 +9,18 @@ class ErrorSnackbar {
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  static void showSuccessNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
       ),
     );
   }

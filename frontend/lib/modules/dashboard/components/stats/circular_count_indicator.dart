@@ -8,14 +8,14 @@ class CircularCountIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      radius: 50,
+      radius: 45,
       backgroundColor: Colors.white,
       child: Text(
         countText,
         style: const TextStyle(
           color: Colors.blue,
           fontWeight: FontWeight.bold,
-          fontSize: 40,
+          fontSize: 30,
         ),
       ),
     );

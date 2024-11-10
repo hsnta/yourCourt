@@ -1,0 +1,68 @@
+{
+  "customizeDrills": [
+    {
+      "drillType": "TWO_BALL_DRILLS",
+      "drillDifficulty": "Beginner",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Two Ball Drills",
+      "drillName": "Two Ball Drills"
+    },
+    {
+      "drillType": "CONE_DRILLS",
+      "drillDifficulty": "Intermediate",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Cone Drills",
+      "drillName": "Cone Drills"
+    },
+    {
+      "drillType": "CROSSOVERS",
+      "drillDifficulty": "Advanced",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Crossovers",
+      "drillName": "Crossovers"
+    },
+    {
+      "drillType": "CHANGE_OF_SPEED",
+      "drillDifficulty": "NBA",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Change of Speed",
+      "drillName": "Change of Speed"
+    },
+    {
+      "drillType": "CHANGE_OF_DIRECTION",
+      "drillDifficulty": "Beginner",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Change of Direction",
+      "drillName": "Change of Direction"
+    },
+    {
+      "drillType": "CATCH_AND_SHOT",
+      "drillDifficulty": "Intermediate",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Catch and Shot",
+      "drillName": "Catch and Shot"
+    },
+    {
+      "drillType": "FIVE_STAR_DRILL",
+      "drillDifficulty": "Advanced",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Five Star Drill",
+      "drillName": "Five Star Drill"
+    },
+    {
+      "drillType": "DRIBBLE_PULL_UPS",
+      "drillDifficulty": "NBA",
+      "categories":  ["test"],
+      "tags":  ["test"],
+      "description":  "Description for Dribble Pull Ups",
+      "drillName": "Dribble Pull Ups"
+    }
+  ]
+}

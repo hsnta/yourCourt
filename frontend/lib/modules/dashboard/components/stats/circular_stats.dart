@@ -15,13 +15,13 @@ class CircularStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 120,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
           CircularCountIndicator(countText: countText),
           Positioned(
-            top: 80, // Adjust this value to control the overlap
+            top: 70, // Adjust this value to control the overlap
             child: CountDescriptionBox(descriptionText: descriptionText),
           ),
         ],

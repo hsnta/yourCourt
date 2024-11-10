@@ -9,7 +9,7 @@ class BackgroundImage extends StatelessWidget {
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/dashboard_background.png'),
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.fitHeight,
           alignment: Alignment.topCenter,
         ),
       ),

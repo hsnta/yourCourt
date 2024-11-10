@@ -36,7 +36,7 @@ class ChatsBodyState extends State<ChatsBody> {
       setState(() {
         isLoading = false;
       });
-      ErrorSnackbar.show(context, "Failed to fetch data");
+      Snackbar.showErrorNotification(context, "Failed to fetch data");
     }
   }
 

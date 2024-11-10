@@ -33,7 +33,7 @@ class Stats extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 50.0),
+                SizedBox(height: 1.0),
                 StatsRow(
                   stats: [
                     CircularStats(
@@ -50,7 +50,7 @@ class Stats extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 5.0),
                 ProgressBar(value: 0.5),
                 SizedBox(height: 5.0),
                 ProgressText(),

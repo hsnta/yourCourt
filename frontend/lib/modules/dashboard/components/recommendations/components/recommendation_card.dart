@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/modules/dashboard/components/videoplayer/video_list_page.dart';
+import 'package:frontend/shared/components/your_court_app_bar.dart';
 
 class RecommendationCard extends StatelessWidget {
   final String title;
@@ -117,8 +119,67 @@ class _DragButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.drag_indicator, color: Colors.black),
       onPressed: () {
+        print('object');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Video(),
+          ),
+        );
         // Handle drag button press
       },
+    );
+  }
+}
+
+class Video extends StatelessWidget {
+  const Video({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const YourCourtAppBar(
+      titleText: "",
+      ),
+      body: VideoPage(),
+    );
+  }
+}
+
+class VideoPage extends StatelessWidget {
+  final List<Map<String, String>> videos = [
+    {
+      'url':
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      'title': 'Kobe Drill',
+      'description': 'Athletic Playmaking Shooting Guard Layup Drills'
+    },
+    {
+      'url':
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      'title': 'Curry Drill',
+      'description': 'Another short animated film featuring animals.'
+    },
+    {
+      'url':
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      'title': 'D Rose Drill',
+      'description': 'Yet another short animated film featuring animals.'
+    },
+    {
+      'url':
+      'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      'title': 'LBJ Drill',
+      'description': 'Yet another short animated film featuring animals.'
+    },
+  ];
+
+  VideoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: VideoListPage(videos: videos),
     );
   }
 }

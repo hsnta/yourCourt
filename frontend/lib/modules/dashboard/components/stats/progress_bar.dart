@@ -8,7 +8,7 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
+      height: 35,
       child: LinearProgressIndicator(
         backgroundColor: Colors.white,
         valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),

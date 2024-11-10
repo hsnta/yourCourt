@@ -1,6 +1,7 @@
 const express = require('express');
 const chats = require('./chats/chats.json');
 const users = require('./users/users.json');
+const customizeDrills = require('./customize-drills/cutomize-drills.json')
 const recommendations = require('./recommendations/recommendations.json');
 const cors = require('cors');
 const jsonGraphqlExpress = require('json-graphql-server/node');
@@ -12,6 +13,7 @@ const data = {
     ...users,
     ...chats,
     ...recommendations,
+    ...customizeDrills
 };
 
 app.use(cors());

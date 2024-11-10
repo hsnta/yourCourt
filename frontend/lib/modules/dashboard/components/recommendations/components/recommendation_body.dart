@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/modules/dashboard/components/customize_workout/customize_workout.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/recommendations_list.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/components/customize_workout_button.dart';
 import 'package:frontend/modules/dashboard/components/recommendations/services/recommendation_service.dart';
@@ -33,7 +34,7 @@ class RecommendationsBodyState extends State<RecommendationsBody> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        ErrorSnackbar.show(context, "Failed to fetch data");
+        Snackbar.showErrorNotification(context, "Failed to fetch data");
       });
     }
   }
@@ -61,6 +62,12 @@ class RecommendationsBodyState extends State<RecommendationsBody> {
         ),
         CustomizeWorkoutButton(
           onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CustomizeWorkoutPage(),
+              ),
+            );
             // Add your action here
           },
         ),
@@ -68,3 +75,4 @@ class RecommendationsBodyState extends State<RecommendationsBody> {
     );
   }
 }
+
